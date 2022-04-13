@@ -1,5 +1,3 @@
-import java.util.Random;
-
 public class Calculator {
     
     public static double toThePowerOf (double base, double exponent) {
