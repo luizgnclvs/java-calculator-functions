@@ -7,7 +7,7 @@ public class Calculator {
         exponentStr = exponentStr.substring(exponentStr.indexOf(".") + 1);
         int decimal = Integer.parseInt(exponentStr);
 
-        if (decimal > 0) {
+        if (decimal != 0) { //absoluteValue(exponent) - Math.floor(absoluteValue(exponent)) != 0
             String fraction = convertToFraction(exponent);
             double numerator = Double.parseDouble(fraction.substring(0, fraction.indexOf("/")));
             double denominator = Double.parseDouble(fraction.substring(fraction.indexOf("/") + 1));
@@ -15,7 +15,7 @@ public class Calculator {
             power = nthRootOf(toThePowerOf(base, numerator), denominator);
         } else {
             if (exponent < 0) {
-                for (int i = 0; i < Math.abs(exponent); i++) {
+                for (int i = 0; i < absoluteValue(exponent); i++) {
                     power /= base;
                 }
             } else {
@@ -35,11 +35,11 @@ public class Calculator {
         double currentIteration = 0.0;
         while (diffRoots > accuracy) {
             currentIteration = ((n - 1.0) * guess + a / toThePowerOf(guess, n - 1)) / n;
-            diffRoots = Math.abs(currentIteration - guess);
+            diffRoots = absoluteValue(currentIteration - guess);
             guess = currentIteration;
         }
 
-        return Math.round(currentIteration * 10000000000000000.0) / 10000000000000000.0;
+        return Math.round(currentIteration * 1000000.0) / 1000000.0;
     }
 
     public static int findGCD (double x, double y) {
@@ -53,29 +53,57 @@ public class Calculator {
         return gcd;
     }
 
+    public static double absoluteValue (double n) {
+        if (n < 0) {
+            n *= -1;
+        }
+
+        return n;
+    }
+
     public static String convertToFraction(double n) {
-        int whole = (int)Math.floor(n);
-        double decimal = n - whole;
+        String fraction = "";
+        boolean negative = false;
 
-        String decimalStr = Double.toString(decimal);
-        decimalStr = decimalStr.substring(2);
-        int numerator = Integer.parseInt(decimalStr);
+        if (n < 0) {
+            n = absoluteValue(n);
+            negative = true;
+        }
 
-        int power = decimalStr.length();
-        int denominator = (int)toThePowerOf(10, power);
-        
-        int gcd = findGCD(numerator, denominator);
-        numerator /= gcd;
-        denominator /= gcd;
-        numerator += (denominator * whole);
+        if (n - Math.floor(n) == 0) {
+            if (negative) {
+                fraction = "-";
+            }
+            fraction += Integer.toString((int)n) + "/1";
+        } else {
+            int whole = (int)Math.floor(n);
+            double decimal = n - whole;
 
-        return Integer.toString(numerator) + "/" + Integer.toString(denominator);
+            String decimalStr = Double.toString(decimal);
+            decimalStr = decimalStr.substring(decimalStr.indexOf(".") + 1, 8);
+            int numerator = Integer.parseInt(decimalStr);
+
+            int exponent = decimalStr.length();
+            int denominator = (int)toThePowerOf(10, exponent);
+            
+            int gcd = findGCD(numerator, denominator);
+            numerator /= gcd;
+            denominator /= gcd;
+            numerator += (denominator * whole);
+
+            if (negative == true) {
+                fraction = "-" + Integer.toString(numerator) + "/" + Integer.toString(denominator);
+            } else {
+                fraction = Integer.toString(numerator) + "/" + Integer.toString(denominator);
+            }
+        }
+
+        return fraction;
     }
 
     public static void main(String[] args) {
         
-        double x = nthRootOf(2, 4);
-        double y = toThePowerOf(2, 1/4.0);
-        System.out.print(x + " " + y);
+        String str = convertToFraction(-2.2);
+        System.out.print(str);
     }
 }
