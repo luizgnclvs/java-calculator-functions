@@ -1,4 +1,22 @@
 public class Calculator {
+
+    public static boolean isNumeric (String str) {
+        boolean numeric = false;
+
+        String number = "-?[0-9]+";
+        String decimalNum = number + "[,\\.]?[0-9]+";
+        String bar = "[./]";
+        
+        if (str.matches(number) || //matches with any integer number, positive or not
+            str.matches(decimalNum) || //matches with any decimal number, positive or not
+            str.matches(number + bar + number) || //matches with any fraction with both numerator and denominator as integers, whether they be positive or not
+            str.matches(decimalNum + bar + number) || //matches with any fraction with a decimal numerator and integer denominator, whether they be positive or not
+            str.matches(number + bar + decimalNum) || //matches with any fraction with a integer numerator and decimal denominator, whether they be positive or not
+            str.matches(decimalNum + bar + decimalNum)) { //matches with any fraction with both numerator and denominator as decimals, whether they be positive or not
+            numeric = true;
+        }
+        return str != null && numeric;
+    }
     
     public static double toThePowerOf (double base, double exponent) {
         double power = 1;
@@ -40,7 +58,7 @@ public class Calculator {
 
     public static int findGCD (double x, double y) {
         int gcd = 1;
-        
+
         for (int i = 1; i <= x && i <= y; i++) {
             if (x % i == 0 && y % i == 0) {
                 gcd = i;
@@ -87,7 +105,7 @@ public class Calculator {
 
             int exponent = decimalStr.length();
             int denominator = (int)toThePowerOf(10, exponent);
-            
+
             int gcd = findGCD(numerator, denominator);
             numerator /= gcd;
             denominator /= gcd;
@@ -100,10 +118,7 @@ public class Calculator {
     }
 
     public static void main(String[] args) {
+
         
-        double x = toThePowerOf(3.0, (2/3.0));
-        double y = nthRootOf(9, 3);
-        String str = convertToFraction(0.05);
-        System.out.print(x + " " + y + " " + str);
     }
 }
