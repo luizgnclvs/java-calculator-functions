@@ -75,7 +75,14 @@ public class Calculator {
             decimalStr = decimalStr.substring(decimalStr.indexOf(".") + 1);
             if (decimalStr.length() > 6) {
                 decimalStr = decimalStr.substring(0, 6);
+
+                if (decimalStr.toCharArray()[1] == decimalStr.toCharArray()[2] &&
+                    decimalStr.toCharArray()[1] == decimalStr.toCharArray()[3] &&
+                    decimalStr.toCharArray()[1] == decimalStr.toCharArray()[4]) {
+                    decimalStr = decimalStr.substring(0, 2);
+                }
             }
+
             int numerator = Integer.parseInt(decimalStr);
 
             int exponent = decimalStr.length();
