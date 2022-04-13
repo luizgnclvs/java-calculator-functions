@@ -3,11 +3,7 @@ public class Calculator {
     public static double toThePowerOf (double base, double exponent) {
         double power = 1;
 
-        String exponentStr = Double.toString(exponent);
-        exponentStr = exponentStr.substring(exponentStr.indexOf(".") + 1);
-        int decimal = Integer.parseInt(exponentStr);
-
-        if (decimal != 0) { //absoluteValue(exponent) - Math.floor(absoluteValue(exponent)) != 0
+        if (absoluteValue(exponent) - Math.floor(absoluteValue(exponent)) != 0) {
             String fraction = convertToFraction(exponent);
             double numerator = Double.parseDouble(fraction.substring(0, fraction.indexOf("/")));
             double denominator = Double.parseDouble(fraction.substring(fraction.indexOf("/") + 1));
@@ -76,7 +72,10 @@ public class Calculator {
             double decimal = n - whole;
 
             String decimalStr = Double.toString(decimal);
-            decimalStr = decimalStr.substring(decimalStr.indexOf(".") + 1, 8);
+            decimalStr = decimalStr.substring(decimalStr.indexOf(".") + 1);
+            if (decimalStr.length() > 6) {
+                decimalStr = decimalStr.substring(0, 6);
+            }
             int numerator = Integer.parseInt(decimalStr);
 
             int exponent = decimalStr.length();
@@ -95,7 +94,9 @@ public class Calculator {
 
     public static void main(String[] args) {
         
-        double x = toThePowerOf(3, 2);
-        System.out.print(x);
+        double x = toThePowerOf(3.0, (2/3.0));
+        double y = nthRootOf(9, 3);
+        String str = convertToFraction(0.05);
+        System.out.print(x + " " + y + " " + str);
     }
 }

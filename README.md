@@ -1,3 +1,3 @@
 # Calculadora
 
-Operações matemáticas usando métodos do java.
+Operações matemáticas usando métodos feitos manualmente em java.
