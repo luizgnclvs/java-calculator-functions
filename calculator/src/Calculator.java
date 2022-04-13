@@ -62,18 +62,14 @@ public class Calculator {
     }
 
     public static String convertToFraction(double n) {
-        String fraction = "";
-        boolean negative = false;
+        String fraction = "";        
 
         if (n < 0) {
             n = absoluteValue(n);
-            negative = true;
+            fraction = "-";
         }
 
         if (n - Math.floor(n) == 0) {
-            if (negative) {
-                fraction = "-";
-            }
             fraction += Integer.toString((int)n) + "/1";
         } else {
             int whole = (int)Math.floor(n);
@@ -91,11 +87,7 @@ public class Calculator {
             denominator /= gcd;
             numerator += (denominator * whole);
 
-            if (negative == true) {
-                fraction = "-" + Integer.toString(numerator) + "/" + Integer.toString(denominator);
-            } else {
-                fraction = Integer.toString(numerator) + "/" + Integer.toString(denominator);
-            }
+            fraction += Integer.toString(numerator) + "/" + Integer.toString(denominator);            
         }
 
         return fraction;
@@ -103,7 +95,7 @@ public class Calculator {
 
     public static void main(String[] args) {
         
-        String str = convertToFraction(-2.2);
-        System.out.print(str);
+        double x = toThePowerOf(3, 2);
+        System.out.print(x);
     }
 }
