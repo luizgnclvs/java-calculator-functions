@@ -17,7 +17,62 @@ public class Calculator {
         }
         return str != null && numeric;
     }
+
+    public static int countOccurences(String str, char searchedChar, int index) {
+        if (index >= str.length()) {
+            return 0;
+        }
+        
+        int count;
+        if (str.charAt(index) == searchedChar) {
+            count = 1;
+        } else {
+             count = 0;
+        }
+        return count + countOccurences(str, searchedChar, index + 1);
+    }
     
+    public static String formatNumber (String str) {
+        boolean negative = false;
+        if (countOccurences(str, '-', 0) % 2 != 0) {            
+            negative = true;
+        }
+
+        while (countOccurences(str, '-', 0) > 0) {           
+            StringBuilder sb = new StringBuilder(str);
+            sb.deleteCharAt(str.indexOf('-'));
+            str = sb.toString();
+        }
+
+        boolean fraction = false;
+        if (str.matches("-?[0-9]+[,\\.]?[0-9]*./-?[0-9]+[,\\.]?[0-9]*")) {
+            fraction = true;
+            String numerator = str.substring(0, str.indexOf("/"));
+            String denominator = str.substring(str.indexOf("/") + 1);
+            numerator = formatNumber(numerator);
+            denominator = formatNumber(denominator);
+            str = numerator + "/" + denominator;
+        }
+
+        boolean decimal = false;
+        if (str.matches("-?[0-9]+[,\\.][0-9]+")) {
+            decimal = true;
+            if (str.substring(str.indexOf("[,\\.]") + 1).matches("[0]+.[1-9]") == false) {
+                String divide = ".";
+                if (str.matches("-?[0-9]+,[0-9]+")) {
+                    divide = ",";
+                }
+                str = str.substring(0, str.indexOf(divide));
+                decimal = false;
+            }    
+        }
+
+        if (negative) {
+            str = "-" + str;
+        }
+        return str;
+    }
+
     public static double toThePowerOf (double base, double exponent) {
         double power = 1;
 
@@ -38,7 +93,6 @@ public class Calculator {
                 }
             }
         }
-
         return power;
     }
 
@@ -47,12 +101,12 @@ public class Calculator {
         double accuracy = 0.000001;
         double diffRoots = 2147483647;
         double currentIteration = 0.0;
+        
         while (diffRoots > accuracy) {
             currentIteration = ((n - 1.0) * guess + a / toThePowerOf(guess, n - 1)) / n;
             diffRoots = absoluteValue(currentIteration - guess);
             guess = currentIteration;
         }
-
         return Math.round(currentIteration * 1000000.0) / 1000000.0;
     }
 
@@ -71,7 +125,6 @@ public class Calculator {
         if (n < 0) {
             n *= -1;
         }
-
         return n;
     }
 
