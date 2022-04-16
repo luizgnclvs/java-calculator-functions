@@ -6,10 +6,8 @@ public class Keypad {
 
         Scanner read = new Scanner(System.in);
 
-        String str = read.nextLine();
+        String num = read.nextLine();
 
-        String num = Notation.formatNumber(str);
-
-        System.out.println(num);
+        System.out.println(Notation.formatNumber(num));
     }
 }

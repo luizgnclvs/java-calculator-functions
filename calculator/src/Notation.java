@@ -35,77 +35,102 @@ public class Notation {
         return numeric;
     }
 
-    public static String formatNumber (String str) throws NumberFormatException {
+    public static String formatNumber (String num) throws NumberFormatException {
 
-        if (!isNumeric(str)) {
+        if (!isNumeric(num)) {
             throw new NumberFormatException("O valor inserido não é um número.");
         }
 
         String[] numbers = numbersNotation();
 
-        if (str.matches(numbers[0]) || str.matches(numbers[1])) {
+        if (num.matches(numbers[0]) || num.matches(numbers[1])) {
             boolean negative = false;
 
-            if (str.matches("-.*")) {
+            if (num.matches("-.*")) {
                 negative = true;
-                str = str.substring(str.indexOf("-") + 1);
+                num = num.substring(num.indexOf("-") + 1);
             }
 
-            if (str.matches("[0]+.+")) {
-                int index = 0, indexStart = str.length();
+            if (num.matches("[0]+.+")) {
+                int index = 0, indexStart = num.length();
+
                 for (int i = 1; i < 10; i++) {
                     String match = Integer.toString(i);
-                    if (str.matches(".*" + match + ".*")) {
-                        index = str.indexOf(match);
+
+                    if (num.matches(".*" + match + ".*")) {
+                        index = num.indexOf(match);
+
                         if (index <= indexStart) {
                             indexStart = index;
                         }
                     }
                 }
-                str = str.substring(indexStart);
+
+                num = num.substring(indexStart);
             }
 
-            if (str.matches(numbers[1])) {
-                if (str.matches(".*,.*")) {
-                    StringBuilder strb = new StringBuilder(str);
-                    strb.replace(str.indexOf(","), str.indexOf(",") + 1, ".");
-                    str = strb.toString();
+            if (num.matches(numbers[1])) {
+                if (num.matches(".*,.*")) {
+                    StringBuilder strb = new StringBuilder(num);
+
+                    strb.replace(num.indexOf(","), num.indexOf(",") + 1, ".");
+                    num = strb.toString();
                 }
 
-                if (str.substring(str.indexOf(".") + 1).matches("[0]+")) { //cu
-                    str = str.substring(0, str.indexOf("."));
+                if (num.substring(num.indexOf(".") + 1).matches("[0]+")) {
+                    num = num.substring(0, num.indexOf("."));
                 }
 
-                if (str.matches("[0-9]+\\.[0]*[^0]+[0]+")) { //cu
+                if (num.matches("[0-9]+\\.[0]*[^0]+[0]+")) {
                     int index = 0, indexEnd = 0;
+
                     for (int i = 1; i < 10; i++) {
                         String match = Integer.toString(i);
-                        if (str.matches(".*" + match + ".*")) {
-                            index = str.lastIndexOf(match);
+
+                        if (num.matches(".*" + match + ".*")) {
+                            index = num.lastIndexOf(match);
+
                             if (index >= indexEnd) {
                                 indexEnd = index;
                             }
                         }
-                    }                    
-                    str = str.substring(0, indexEnd + 1);
+                    }
+
+                    num = num.substring(0, indexEnd + 1);
                 }
             }
 
             if (negative) {
-                str = "-" + str;
+                num = "-" + num;
             }
         }
 
         for (int i = 2; i < numbers.length; i++) {
-            if (str.matches(numbers[i])) {
-                String numerator = str.substring(0, str.indexOf("/"));
-                String denominator = str.substring(str.indexOf("/") + 1);
+            if (num.matches(numbers[i])) {
+                String numerator = num.substring(0, num.indexOf("/"));
+                String denominator = num.substring(num.indexOf("/") + 1);
 
                 numerator = formatNumber(numerator);
                 denominator = formatNumber(denominator);
 
+                if (numerator.matches(numbers[1]) || denominator.matches(numbers[1])) {
+                    if (numerator.matches(numbers[1])) {
+                        numerator = convertToFraction(Double.parseDouble(numerator));
+                    }
+
+                    if (denominator.matches(numbers[1])) {
+                        denominator = convertToFraction(Double.parseDouble(denominator));
+                    }
+
+                    String fraction = Fractions.division(numerator, denominator);
+
+                    numerator = fraction.substring(0, fraction.indexOf("/"));
+                    denominator = fraction.substring(fraction.indexOf("/") + 1);
+                }
+
                 if (denominator.matches("-.*")) {
                     denominator = denominator.substring(denominator.indexOf("-") + 1);
+
                     if (numerator.matches("-.*")) {
                         numerator = numerator.substring(numerator.indexOf("-") + 1);
                     } else {
@@ -113,27 +138,27 @@ public class Notation {
                     }
                 }
 
-                str = numerator + "/" + denominator;
+                num = numerator + "/" + denominator;
             }
         }
 
-        return str;
+        return num;
     }
 
-    public static String convertToFraction(double n) {
+    public static String convertToFraction (double num) {
 
         String fraction = "";
 
-        if (n < 0) {
-            n = Calculator.absoluteValue(n);
+        if (num < 0) {
+            num = Calculator.absoluteValue(num);
             fraction = "-";
         }
 
-        if (n - Math.floor(n) == 0) {
-            fraction += Integer.toString((int)n) + "/1";
+        if (num - Calculator.roundDown(num) == 0) {
+            fraction += Integer.toString((int)num) + "/1";
         } else {
-            int whole = (int)Math.floor(n);
-            double decimal = n - whole;
+            int integer = (int)Calculator.roundDown(num);
+            double decimal = num - integer;
 
             String decimalStr = Double.toString(decimal);
             decimalStr = decimalStr.substring(decimalStr.indexOf(".") + 1);
@@ -154,9 +179,10 @@ public class Notation {
             int denominator = (int)Calculator.toThePowerOf(10, exponent);
 
             int gcd = Calculator.findGCD(numerator, denominator);
+
             numerator /= gcd;
             denominator /= gcd;
-            numerator += (denominator * whole);
+            numerator += (denominator * integer);
 
             fraction += Integer.toString(numerator) + "/" + Integer.toString(denominator);            
         }

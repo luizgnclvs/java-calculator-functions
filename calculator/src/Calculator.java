@@ -63,4 +63,15 @@ public class Calculator {
 
         return n;
     }
+
+    public static double roundDown (double n) {
+
+        String num = Double.toString(n);
+
+        num = num.substring(0, num.indexOf("."));
+
+        n = Double.parseDouble(num);
+
+        return n;
+    }
 }
