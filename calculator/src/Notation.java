@@ -1,3 +1,5 @@
+import java.io.Console;
+
 public class Notation {
 
     public static String[] numbersNotation () {
@@ -51,7 +53,7 @@ public class Notation {
                 num = num.substring(num.indexOf("-") + 1);
             }
 
-            if (num.matches("[0]+.+")) {
+            if (num.matches("[0]+[1-9]+[,\\.]?.*")) {
                 int index = 0, indexStart = num.length();
 
                 for (int i = 1; i < 10; i++) {
@@ -113,6 +115,16 @@ public class Notation {
                 numerator = formatNumber(numerator);
                 denominator = formatNumber(denominator);
 
+                if (denominator.matches("-.*")) {
+                    denominator = denominator.substring(denominator.indexOf("-") + 1);
+
+                    if (numerator.matches("-.*")) {
+                        numerator = numerator.substring(numerator.indexOf("-") + 1);
+                    } else {
+                        numerator = "-" + numerator;
+                    }
+                }
+
                 if (numerator.matches(numbers[1]) || denominator.matches(numbers[1])) {
                     if (numerator.matches(numbers[1])) {
                         numerator = convertToFraction(Double.parseDouble(numerator));
@@ -124,21 +136,18 @@ public class Notation {
 
                     String fraction = Fractions.division(numerator, denominator);
 
-                    numerator = fraction.substring(0, fraction.indexOf("/"));
-                    denominator = fraction.substring(fraction.indexOf("/") + 1);
-                }
-
-                if (denominator.matches("-.*")) {
-                    denominator = denominator.substring(denominator.indexOf("-") + 1);
-
-                    if (numerator.matches("-.*")) {
-                        numerator = numerator.substring(numerator.indexOf("-") + 1);
+                    if (fraction == "1" || fraction == "-1") {
+                        num = fraction;
+                        break;
                     } else {
-                        numerator = "-" + numerator;
+                        numerator = fraction.substring(0, fraction.indexOf("/"));
+                        denominator = fraction.substring(fraction.indexOf("/") + 1);
                     }
                 }
 
                 num = numerator + "/" + denominator;
+
+                break;
             }
         }
 
@@ -160,23 +169,29 @@ public class Notation {
             int integer = (int)Calculator.roundDown(num);
             double decimal = num - integer;
 
-            String decimalStr = Double.toString(decimal);
+            String decimalStr = String.format("%f", decimal);
             decimalStr = decimalStr.substring(decimalStr.indexOf(".") + 1);
 
-            if (decimalStr.length() > 6) {
-                decimalStr = decimalStr.substring(0, 6);
+            /*for (int i = 1; i < 10; i++) {
+                if (decimalStr.matches("0*" + i + "{2,6}")) {
+                    if (decimalStr.matches("0+.*")) {
+                        int zeros = decimalStr.lastIndexOf("0");
+                    }
 
-                if (decimalStr.toCharArray()[1] == decimalStr.toCharArray()[2] &&
-                    decimalStr.toCharArray()[1] == decimalStr.toCharArray()[3] &&
-                    decimalStr.toCharArray()[1] == decimalStr.toCharArray()[4]) {
-                    decimalStr = decimalStr.substring(0, 2);
+                    if (i == 1) {
+                        1/9
+                    }
+                    
+                    if (i == 2) {
+                        2/9
+                    }
+
+                    if ()
                 }
-            }
+            }*/
 
             int numerator = Integer.parseInt(decimalStr);
-
-            int exponent = decimalStr.length();
-            int denominator = (int)Calculator.toThePowerOf(10, exponent);
+            int denominator = (int)Calculator.toThePowerOf(10, decimalStr.length());
 
             int gcd = Calculator.findGCD(numerator, denominator);
 
@@ -184,7 +199,7 @@ public class Notation {
             denominator /= gcd;
             numerator += (denominator * integer);
 
-            fraction += Integer.toString(numerator) + "/" + Integer.toString(denominator);            
+            fraction += Integer.toString(numerator) + "/" + Integer.toString(denominator);
         }
 
         return fraction;

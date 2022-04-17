@@ -6,8 +6,10 @@ public class Keypad {
 
         Scanner read = new Scanner(System.in);
 
-        String num = read.nextLine();
+        Double num;
 
-        System.out.println(Notation.formatNumber(num));
+       
+            System.out.println(Notation.convertToFraction(-1));
+        
     }
 }

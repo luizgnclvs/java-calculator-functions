@@ -4,6 +4,20 @@ public class Fractions {
 
         String numerator1, numerator2, denominator1, denominator2;
 
+        boolean negative = false;
+
+        if (dividend.matches("-.*") ^ divisor.matches("-.*")) {
+            negative = true;
+        }
+
+        if (dividend.matches("-.*")) {
+            dividend = dividend.substring(dividend.indexOf("-") + 1);
+        }
+
+        if (divisor.matches("-.*")) {
+            divisor = divisor.substring(divisor.indexOf("-") + 1);
+        }
+
         if (dividend.matches(".*/.*")) {
             numerator1 = dividend.substring(0, dividend.indexOf("/"));
             denominator1 = dividend.substring(dividend.indexOf("/") + 1);
@@ -16,8 +30,8 @@ public class Fractions {
             numerator2 = divisor.substring(0, divisor.indexOf("/"));
             denominator2 = divisor.substring(divisor.indexOf("/") + 1);
         } else {
-            numerator2 = "1";
-            denominator2 = divisor;
+            numerator2 = divisor;
+            denominator2 = "1";
         }
 
         int finalNumerator = Integer.parseInt(numerator1) * Integer.parseInt(denominator2);
@@ -28,6 +42,18 @@ public class Fractions {
         finalNumerator /= gcd;
         finalDenominator /= gcd;
 
-        return Integer.toString(finalNumerator) + "/" + Integer.toString(finalDenominator);
+        if (finalNumerator == finalDenominator) {
+            if (negative) {
+                return "-1";
+            } else {
+                return "1";
+            }
+        } else {
+            if (negative) {
+                return "-" + Integer.toString(finalNumerator) + "/" + Integer.toString(finalDenominator);
+            } else {
+                return Integer.toString(finalNumerator) + "/" + Integer.toString(finalDenominator);
+            }
+        }
     }
 }

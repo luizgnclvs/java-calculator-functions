@@ -66,7 +66,7 @@ public class Calculator {
 
     public static double roundDown (double n) {
 
-        String num = Double.toString(n);
+        String num = String.format("%f", n);
 
         num = num.substring(0, num.indexOf("."));
 
