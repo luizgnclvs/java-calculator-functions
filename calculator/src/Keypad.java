@@ -6,10 +6,8 @@ public class Keypad {
 
         Scanner read = new Scanner(System.in);
 
-        Double num;
+        Double num = read.nextDouble();
 
-       
-            System.out.println(Notation.convertToFraction(12.0/9));
-        
+        System.out.println(Notation.convertToFraction(num));
     }
 }

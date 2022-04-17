@@ -57,10 +57,8 @@ public class Notation {
                 int index = 0, indexStart = num.length();
 
                 for (int i = 1; i < 10; i++) {
-                    String match = Integer.toString(i);
-
-                    if (num.matches(".*" + match + ".*")) {
-                        index = num.indexOf(match);
+                    if (num.matches(".*" + Integer.toString(i) + ".*")) {
+                        index = num.indexOf(Integer.toString(i));
 
                         if (index <= indexStart) {
                             indexStart = index;
@@ -87,10 +85,8 @@ public class Notation {
                     int index = 0, indexEnd = 0;
 
                     for (int i = 1; i < 10; i++) {
-                        String match = Integer.toString(i);
-
-                        if (num.matches(".*" + match + ".*")) {
-                            index = num.lastIndexOf(match);
+                        if (num.matches(".*" + Integer.toString(i) + ".*")) {
+                            index = num.lastIndexOf(Integer.toString(i));
 
                             if (index >= indexEnd) {
                                 indexEnd = index;
@@ -164,29 +160,48 @@ public class Notation {
         }
 
         if (num - Calculator.roundDown(num) == 0) {
-            fraction += Integer.toString((int)num) + "/1";
+            fraction += Integer.toString((int)num) + "/1 = " + Integer.toString((int)num);
         } else {
             int integer = (int)Calculator.roundDown(num);
             double decimal = num - integer;
 
             String decimalStr = String.format("%f", decimal);
             decimalStr = decimalStr.substring(decimalStr.indexOf(".") + 1);
+            decimalStr = decimalStr.substring(0, 5);
 
             for (int i = 1; i < 10; i++) {
-                if (decimalStr.matches("0*" + i + "{3,6}")) {
-                    int zeros = 0;
+                if (decimalStr.matches("[0-9]*" + i + "{3,6}")) {
+                    int houseCount = 0, index = 0;
 
-                    if (decimalStr.matches("0+.*")) {
-                        zeros = decimalStr.lastIndexOf("0") + 1;
+                    for (int j = 0; j < 10; j++) {
+                        if (j == i) {
+                            continue;
+                        }
+
+                        if (decimalStr.matches(".*" + Integer.toString(j) + ".*")) {
+                            index = decimalStr.lastIndexOf(Integer.toString(j));
+
+                            if (index >= houseCount) {
+                                houseCount = index + 1;
+                            }
+                        }   
                     }
+
+                    int nonRepeating = Integer.parseInt((decimalStr.substring(0, houseCount)));
 
                     String [] repeatingDecimals = new String [] {"1/9", "2/9", "1/3", "4/9", "5/9", "2/3", "7/9", "8/9", "1"};
 
                     decimalStr = repeatingDecimals[i - 1];
 
-                    for (int j = 0; j < zeros; j++) {
+                    for (int k = 0; k < houseCount; k++) {
                         decimalStr += "0";
                     }
+
+                    nonRepeating *= Integer.parseInt(decimalStr.substring(decimalStr.indexOf("/") + 1, (decimalStr.indexOf("/") + 2)));
+
+                    nonRepeating += Integer.parseInt(decimalStr.substring(0, 1));
+
+                    decimalStr = Integer.toString(nonRepeating) + decimalStr.substring(decimalStr.indexOf("/"));
                 }
             }
 
@@ -198,15 +213,15 @@ public class Notation {
             } else {
                 numerator = Integer.parseInt(decimalStr);
                 denominator = (int)Calculator.toThePowerOf(10, decimalStr.length());
-
-                int gcd = Calculator.findGCD(numerator, denominator);
-
-                numerator /= gcd;
-                denominator /= gcd;
             }
 
+            int gcd = Calculator.findGCD(numerator, denominator);
+
+            numerator /= gcd;
+            denominator /= gcd;
+
             if (integer > 0) {
-                fraction += Integer.toString(numerator + integer * denominator) + "/" + Integer.toString(denominator) + " = " + Integer.toString(integer) + " " + Integer.toString(numerator) + "/" + Integer.toString(denominator);
+                fraction += Integer.toString(numerator + integer * denominator) + "/" + Integer.toString(denominator) + " = " + Integer.toString(integer) + " × " + Integer.toString(numerator) + "/" + Integer.toString(denominator);
             } else {
                 fraction += Integer.toString(numerator) + "/" + Integer.toString(denominator);
             }
