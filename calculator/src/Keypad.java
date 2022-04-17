@@ -9,7 +9,7 @@ public class Keypad {
         Double num;
 
        
-            System.out.println(Notation.convertToFraction(-1));
+            System.out.println(Notation.convertToFraction(12.0/9));
         
     }
 }

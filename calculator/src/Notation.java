@@ -172,34 +172,44 @@ public class Notation {
             String decimalStr = String.format("%f", decimal);
             decimalStr = decimalStr.substring(decimalStr.indexOf(".") + 1);
 
-            /*for (int i = 1; i < 10; i++) {
-                if (decimalStr.matches("0*" + i + "{2,6}")) {
+            for (int i = 1; i < 10; i++) {
+                if (decimalStr.matches("0*" + i + "{3,6}")) {
+                    int zeros = 0;
+
                     if (decimalStr.matches("0+.*")) {
-                        int zeros = decimalStr.lastIndexOf("0");
+                        zeros = decimalStr.lastIndexOf("0") + 1;
                     }
 
-                    if (i == 1) {
-                        1/9
-                    }
-                    
-                    if (i == 2) {
-                        2/9
-                    }
+                    String [] repeatingDecimals = new String [] {"1/9", "2/9", "1/3", "4/9", "5/9", "2/3", "7/9", "8/9", "1"};
 
-                    if ()
+                    decimalStr = repeatingDecimals[i - 1];
+
+                    for (int j = 0; j < zeros; j++) {
+                        decimalStr += "0";
+                    }
                 }
-            }*/
+            }
 
-            int numerator = Integer.parseInt(decimalStr);
-            int denominator = (int)Calculator.toThePowerOf(10, decimalStr.length());
+            int numerator, denominator;
 
-            int gcd = Calculator.findGCD(numerator, denominator);
+            if (decimalStr.matches(".*/.*")) {
+                numerator = Integer.parseInt(decimalStr.substring(0, decimalStr.indexOf("/")));
+                denominator = Integer.parseInt(decimalStr.substring(decimalStr.indexOf("/") + 1));
+            } else {
+                numerator = Integer.parseInt(decimalStr);
+                denominator = (int)Calculator.toThePowerOf(10, decimalStr.length());
 
-            numerator /= gcd;
-            denominator /= gcd;
-            numerator += (denominator * integer);
+                int gcd = Calculator.findGCD(numerator, denominator);
 
-            fraction += Integer.toString(numerator) + "/" + Integer.toString(denominator);
+                numerator /= gcd;
+                denominator /= gcd;
+            }
+
+            if (integer > 0) {
+                fraction += Integer.toString(numerator + integer * denominator) + "/" + Integer.toString(denominator) + " = " + Integer.toString(integer) + " " + Integer.toString(numerator) + "/" + Integer.toString(denominator);
+            } else {
+                fraction += Integer.toString(numerator) + "/" + Integer.toString(denominator);
+            }
         }
 
         return fraction;
