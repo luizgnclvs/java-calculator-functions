@@ -5,7 +5,7 @@ public class Calculator {
         double power = 1;
 
         if (absoluteValue(exponent) - Math.floor(absoluteValue(exponent)) != 0) {
-            String fraction = Notation.convertToFraction(exponent);
+            String fraction = Notation.convertToFraction(exponent)[0];
 
             double numerator = Double.parseDouble(fraction.substring(0, fraction.indexOf("/")));
             double denominator = Double.parseDouble(fraction.substring(fraction.indexOf("/") + 1));

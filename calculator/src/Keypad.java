@@ -4,10 +4,10 @@ public class Keypad {
 
     public static void main(String[] args) {
 
-        Scanner read = new Scanner(System.in);
+        try (Scanner read = new Scanner(System.in)) {
+            String num = read.nextLine();
 
-        Double num = read.nextDouble();
-
-        System.out.println(Notation.convertToFraction(num));
+            System.out.println(Notation.formatNumber(num));
+        }
     }
 }
