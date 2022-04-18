@@ -185,107 +185,159 @@ public class Notation {
         return numerator + "/" + denominator;
     }
 
-    public static String [] convertToFraction (double num) {
+    public static String [] convertToFraction (double decimal) {
 
-        String [] components = new String [7];
+        String [] fractionComponents = new String [0];
 
-        String fraction = "";
+        boolean negative = false;
 
-        if (num < 0) {
-            num = Calculator.absoluteValue(num);
-            fraction = "-";
+        if (decimal < 0) {
+            decimal = Calculator.absoluteValue(decimal);
+            negative = true;
         }
 
-        if (num - Calculator.roundDown(num) == 0) {
-            fraction += Integer.toString((int)num) + "/1 = " + Integer.toString((int)num);
+        int integer = 0;
+
+        //identifies if the integer part of the decimal number is other than zero - i.e. the resulting fraction will be an improper one - then it sets the correct amount of components in the array
+        if (decimal >= 1) {
+            if (decimal - Calculator.roundDown(decimal) == 0) {
+                fractionComponents = new String [3];
+
+                if (negative) {
+                    fractionComponents[0] = "-" + Integer.toString((int)decimal) + "/1";
+                    //fractional integer
+                    fractionComponents[1] = "-" + Integer.toString((int)decimal);
+                    //numerator, i.e. integer number
+                } else {
+                    fractionComponents[0] = Integer.toString((int)decimal) + "/1";
+                    fractionComponents[1] = Integer.toString((int)decimal);
+                }
+
+                fractionComponents[2] = "1";
+                //denominator
+
+                return fractionComponents;
+            } else {
+                fractionComponents = new String [7];
+
+                integer = (int)Calculator.roundDown(decimal);
+                decimal -= integer;
+            }
         } else {
-            int integer = (int)Calculator.roundDown(num);
-            double decimal = num - integer;
+            fractionComponents = new String [3];
+        }
 
-            String decimalStr = String.format("%f", decimal);
-            decimalStr = decimalStr.substring(decimalStr.indexOf(".") + 1);
-            decimalStr = decimalStr.substring(0, 5);
+        String decimalStr = String.format("%f", decimal);
+        //eliminates the '0.' section of the String to make its manipulation easier
+        decimalStr = decimalStr.substring(decimalStr.indexOf(".") + 1);
+        //eliminates the last character of the String to avoid rounding issues that come from converting a Double variable to a String
+        decimalStr = decimalStr.substring(0, decimalStr.length());
 
-            for (int i = 1; i < 10; i++) {
-                if (decimalStr.matches("[0-9]*" + i + "{3,6}")) {
-                    int houseCount = 0, index = 0;
+        boolean repeatingDecimals = false;
 
-                    for (int j = 0; j < 10; j++) {
-                        if (j == i) {
-                            continue;
-                        }
+        for (int i = 1; i < 10; i++) {
+            //identifies if the decimal contains any repeating decimals whitin the parameters set (i.e. 3 to 6 repeating digits)
+            if (decimalStr.matches("[0-9]*" + i + "{3,6}")) {
+                boolean areThereNonRepeating = false;
 
-                        if (decimalStr.matches(".*" + Integer.toString(j) + ".*")) {
-                            index = decimalStr.lastIndexOf(Integer.toString(j));
+                int digitCount = 0, index = 0;
 
-                            if (index >= houseCount) {
-                                houseCount = index + 1;
-                            }
-                        }
+                //checks if there are any non-repeating decimals
+                for (int j = 0; j < 10; j++) {
+                    if (j == i) {
+                        continue;
                     }
 
-                    int nonRepeating = Integer.parseInt((decimalStr.substring(0, houseCount)));
+                    //if so, the amount of non-repeating digits is found
+                    if (decimalStr.matches(".*" + j + ".*")) {
+                        areThereNonRepeating = true;
 
-                    String [] repeatingDecimals = new String [] {"1/9", "2/9", "1/3", "4/9", "5/9", "2/3", "7/9", "8/9", "1"};
+                        index = decimalStr.lastIndexOf(Integer.toString(j));
 
-                    decimalStr = repeatingDecimals[i - 1];
+                        if (index >= digitCount) {
+                            digitCount = index + 1;
+                        }
+                    }
+                }
 
-                    for (int k = 0; k < houseCount; k++) {
+                //array with fraction equivalents to repeating decimals from 1 to 9
+                String [] repeatingFractions = new String [] {"1/9", "2/9", "1/3", "4/9", "5/9", "2/3", "7/9", "8/9", "1/1"};
+
+                decimalStr = repeatingFractions[i - 1];
+
+                if (areThereNonRepeating) {
+                    int nonRepeating = Integer.parseInt((decimalStr.substring(0, digitCount)));
+
+                    //assigns the amount of zeroes in the denominator according to the number of non-repeating digits
+                    for (int k = 0; k < digitCount; k++) {
                         decimalStr += "0";
                     }
 
+                    //multiplies the non-repeating decimal with the original denominator of the equivalent fraction of the repeating decimal (i.e. 1, 3 or 9)
                     nonRepeating *= Integer.parseInt(decimalStr.substring(decimalStr.indexOf("/") + 1, (decimalStr.indexOf("/") + 2)));
 
+                    //adds the product to the numerator of the fraction to find out the new numerator
                     nonRepeating += Integer.parseInt(decimalStr.substring(0, 1));
 
+                    //puts the new numerator and denominator together into a fraction
                     decimalStr = Integer.toString(nonRepeating) + decimalStr.substring(decimalStr.indexOf("/"));
                 }
             }
-
-            int numerator, denominator;
-
-            if (decimalStr.matches(".*/.*")) {
-                numerator = Integer.parseInt(decimalStr.substring(0, decimalStr.indexOf("/")));
-                denominator = Integer.parseInt(decimalStr.substring(decimalStr.indexOf("/") + 1));
-            } else {
-                numerator = Integer.parseInt(decimalStr);
-                denominator = (int)Calculator.toThePowerOf(10, decimalStr.length());
-            }
-
-            int gcd = Calculator.findGCD(numerator, denominator);
-
-            numerator /= gcd;
-            denominator /= gcd;
-
-            if (integer > 0) {
-                components[0] = fraction + Integer.toString(numerator + integer * denominator) + "/" + Integer.toString(denominator);
-                //vulgar fraction (improper)
-                components[1] = fraction + Integer.toString(numerator + integer * denominator);
-                //numerator
-                components[2] = Integer.toString(denominator);
-                //denominator
-                components[3] = fraction + Integer.toString(integer) + " × " + Integer.toString(numerator) + "/" + Integer.toString(denominator);
-                //mixed number
-                components[4] = Integer.toString(integer);
-                //integer part of the mixeed number
-                components[5] = Integer.toString(numerator);
-                //numerator of the mixed number
-                components[6] = Integer.toString(denominator);
-                //denominator of the mixed number
-            } else {
-                components[0] = fraction + Integer.toString(numerator) + "/" + Integer.toString(denominator);
-                //vulgar fraction (proper)
-                components[1] = fraction + Integer.toString(numerator);
-                //numerator
-                components[2] = Integer.toString(denominator);
-                //denominator
-                components[3] = "";
-                components[4] = "";
-                components[5] = "";
-                components[6] = "";
-            }
         }
 
-        return components;
+        int numerator, denominator;
+
+        //separates the numerator and denominator accordingly
+        if (repeatingDecimals) {
+            numerator = Integer.parseInt(decimalStr.substring(0, decimalStr.indexOf("/")));
+            denominator = Integer.parseInt(decimalStr.substring(decimalStr.indexOf("/") + 1));
+        } else {
+            numerator = Integer.parseInt(decimalStr);
+            //otherwise assigns the number after the decimal point as the numerator
+            denominator = (int)Calculator.toThePowerOf(10, decimalStr.length());
+            //the denominator is found with the result of the base 10 raised to the power of the amount of digits after the decimal point
+        }
+
+        int gcd = Calculator.findGCD(numerator, denominator);
+
+        numerator /= gcd;
+        denominator /= gcd;
+
+        if (integer > 0) {
+            fractionComponents[0] = Integer.toString(numerator + integer * denominator) + "/" + Integer.toString(denominator);
+            //improper vulgar fraction
+            fractionComponents[1] = Integer.toString(numerator + integer * denominator);
+            //numerator
+            fractionComponents[2] = Integer.toString(denominator);
+            //denominator
+            fractionComponents[3] = Integer.toString(integer) + " × " + Integer.toString(numerator) + "/" + Integer.toString(denominator);
+            //mixed number
+            fractionComponents[4] = Integer.toString(integer);
+            //integer part of the mixed number
+            fractionComponents[5] = Integer.toString(numerator);
+            //numerator of the mixed number
+            fractionComponents[6] = Integer.toString(denominator);
+            //denominator of the mixed number
+
+            if (negative) {
+                fractionComponents[0] = "-" + fractionComponents[0];
+                fractionComponents[1] = "-" + fractionComponents[1];
+                fractionComponents[3] = "-" + fractionComponents[3];
+            }
+        } else {
+            fractionComponents[0] = Integer.toString(numerator) + "/" + Integer.toString(denominator);
+            //proper vulgar fraction
+            fractionComponents[1] = Integer.toString(numerator);
+            //numerator
+            fractionComponents[2] = Integer.toString(denominator);
+            //denominator
+
+                if (negative) {
+                    fractionComponents[0] = "-" + fractionComponents[0];
+                    fractionComponents[1] = "-" + fractionComponents[1];
+                }
+        }
+
+        return fractionComponents;
     }
 }
