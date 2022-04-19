@@ -185,24 +185,19 @@ public class Notation {
         return numerator + "/" + denominator;
     }
 
-    // ! tests due
     public static boolean isItFractional (String str) {
-
-        boolean fractional = false;
 
         String [] notation = numbersNotation();
 
         for (int i = 3; i < notation.length; i++) {
             if (str.matches(notation[i])) {
-                fractional = true;
-                break;
+                return true;
             }
         }
 
-        return fractional;
+        return false;
     }
 
-    // ! tests due
     public static String [] typeOfFraction (double decimal) {
 
         String [] fractionComponents;
@@ -224,7 +219,6 @@ public class Notation {
         return fractionComponents;
     }
 
-    // ! tests due
     public static Double convertToDecimal (String fraction) {
 
         if (!isItFractional(fraction)) {
@@ -239,7 +233,6 @@ public class Notation {
         return numerator / denominator;
     }
 
-    // ! tests due
     public static String [] convertToFraction (double decimal) {
 
         String [] fractionComponents = typeOfFraction(decimal);

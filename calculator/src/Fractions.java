@@ -3,7 +3,7 @@ public class Fractions {
     // ! tests due
     public static String [] multiplication (String multiplier, String multiplicand) {
 
-        if (!(Notation.isItFractional(multiplier) && Notation.isItFractional(multiplicand))) {
+        if (Notation.isItFractional(multiplier) == false && Notation.isItFractional(multiplicand) == false) {
             throw new NumberFormatException("O valor inserido não é uma fração");
         }
 
@@ -24,8 +24,20 @@ public class Fractions {
             multiplicand = multiplicand.substring(1);
         }
 
-        String [] factor1 = Notation.typeOfFraction(Notation.convertToDecimal(multiplier));
-        String [] factor2 = Notation.typeOfFraction(Notation.convertToDecimal(multiplicand));
+        String [] factor1;
+        String [] factor2;
+
+        if (!Notation.isItFractional(multiplier)) {
+            factor1 = Notation.typeOfFraction(Double.parseDouble(multiplier));
+        } else {
+            factor1 = Notation.typeOfFraction(Notation.convertToDecimal(multiplier));
+        }
+
+        if (!Notation.isItFractional(multiplicand)) {
+            factor2 = Notation.typeOfFraction(Double.parseDouble(multiplicand));
+        } else {
+            factor2 = Notation.typeOfFraction(Notation.convertToDecimal(multiplicand));
+        }
 
         int numerator1, numerator2, denominator1, denominator2;
 
