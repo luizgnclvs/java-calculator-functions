@@ -1,6 +1,6 @@
 public class Fractions {
 
-    // ! tests due
+    // ! fiz problems with multiplication with decimals
     public static String [] multiplication (String multiplier, String multiplicand) {
 
         if (Notation.isItFractional(multiplier) == false && Notation.isItFractional(multiplicand) == false) {
