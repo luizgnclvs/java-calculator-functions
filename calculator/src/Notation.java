@@ -25,7 +25,7 @@ public class Notation {
         return notation;
     }
 
-    public static boolean isNumeric (String str) {
+    public static boolean isItNumeric (String str) {
 
         String [] notation = numbersNotation();
 
@@ -42,7 +42,7 @@ public class Notation {
 
     public static String formatNumber (String number) {
 
-        if (!isNumeric(number)) {
+        if (!isItNumeric(number)) {
             return "O valor inserido não é um número.";
         }
 
@@ -185,9 +185,68 @@ public class Notation {
         return numerator + "/" + denominator;
     }
 
+    // ! tests due
+    public static boolean isItFractional (String str) {
+
+        boolean fractional = false;
+
+        String [] notation = numbersNotation();
+
+        for (int i = 3; i < notation.length; i++) {
+            if (str.matches(notation[i])) {
+                fractional = true;
+                break;
+            }
+        }
+
+        return fractional;
+    }
+
+    // ! tests due
+    public static String [] typeOfFraction (double decimal) {
+
+        String [] fractionComponents;
+
+        //identifies if the integer part of the decimal number is other than zero - i.e. the resulting fraction will be an improper one - then it sets the correct amount of components in the array
+        if (decimal >= 1) {
+            //identifies if the decimal is actually a invisible denominator fraction, i.e. an integer number
+            if (decimal - Calculator.roundDown(decimal) == 0) { 
+                fractionComponents = new String [1];
+
+                fractionComponents[0] = Integer.toString((int)decimal);
+            } else { //improper fraction
+                fractionComponents = new String [7];
+            }
+        } else { //proper fraction
+            fractionComponents = new String [3];
+        }
+
+        return fractionComponents;
+    }
+
+    // ! tests due
+    public static Double convertToDecimal (String fraction) {
+
+        if (!isItFractional(fraction)) {
+            throw new NumberFormatException("O valor inserido não é uma fração");
+        } else {
+            fraction = formatNumber(fraction);
+        }
+
+        Double numerator = Double.parseDouble(fraction.substring(0, fraction.indexOf("/")));
+        Double denominator = Double.parseDouble(fraction.substring(fraction.indexOf("/") + 1));
+
+        return numerator / denominator;
+    }
+
+    // ! tests due
     public static String [] convertToFraction (double decimal) {
 
-        String [] fractionComponents = new String [0];
+        String [] fractionComponents = typeOfFraction(decimal);
+
+        if (fractionComponents.length == 1) {
+            return fractionComponents;
+        }
 
         boolean negative = false;
 
@@ -198,39 +257,15 @@ public class Notation {
 
         int integer = 0;
 
-        //identifies if the integer part of the decimal number is other than zero - i.e. the resulting fraction will be an improper one - then it sets the correct amount of components in the array
-        if (decimal >= 1) {
-            if (decimal - Calculator.roundDown(decimal) == 0) {
-                fractionComponents = new String [3];
-
-                if (negative) {
-                    fractionComponents[0] = "-" + Integer.toString((int)decimal) + "/1";
-                    //fractional integer
-                    fractionComponents[1] = "-" + Integer.toString((int)decimal);
-                    //numerator, i.e. integer number
-                } else {
-                    fractionComponents[0] = Integer.toString((int)decimal) + "/1";
-                    fractionComponents[1] = Integer.toString((int)decimal);
-                }
-
-                fractionComponents[2] = "1";
-                //denominator
-
-                return fractionComponents;
-            } else {
-                fractionComponents = new String [7];
-
-                integer = (int)Calculator.roundDown(decimal);
-                decimal -= integer;
-            }
-        } else {
-            fractionComponents = new String [3];
+        if (fractionComponents.length == 7) {
+            integer = (int)Calculator.roundDown(decimal);
+            decimal -= integer;
         }
 
         String decimalStr = String.format("%f", decimal);
-        //eliminates the '0.' section of the String to make its manipulation easier
+        //eliminates the '0.' part of the String to make its manipulation easier
         decimalStr = decimalStr.substring(decimalStr.indexOf(".") + 1);
-        //eliminates the last character of the String to avoid rounding issues that come from converting a Double variable to a String
+        //eliminates the last character of the String to avoid rounding issues that may come from converting a Double variable to a String
         decimalStr = decimalStr.substring(0, decimalStr.length());
 
         boolean repeatingDecimals = false;
@@ -303,14 +338,14 @@ public class Notation {
         numerator /= gcd;
         denominator /= gcd;
 
-        if (integer > 0) {
+        if (fractionComponents.length == 7) {
             fractionComponents[0] = Integer.toString(numerator + integer * denominator) + "/" + Integer.toString(denominator);
             //improper vulgar fraction
             fractionComponents[1] = Integer.toString(numerator + integer * denominator);
             //numerator
             fractionComponents[2] = Integer.toString(denominator);
             //denominator
-            fractionComponents[3] = Integer.toString(integer) + " × " + Integer.toString(numerator) + "/" + Integer.toString(denominator);
+            fractionComponents[3] = Integer.toString(integer) + " + " + Integer.toString(numerator) + "/" + Integer.toString(denominator);
             //mixed number
             fractionComponents[4] = Integer.toString(integer);
             //integer part of the mixed number
@@ -322,7 +357,9 @@ public class Notation {
             if (negative) {
                 fractionComponents[0] = "-" + fractionComponents[0];
                 fractionComponents[1] = "-" + fractionComponents[1];
-                fractionComponents[3] = "-" + fractionComponents[3];
+                fractionComponents[3] = "-" + Integer.toString(integer) + " - " + Integer.toString(numerator) + "/" + Integer.toString(denominator);
+                fractionComponents[4] = "-" + fractionComponents[4];
+                fractionComponents[5] = "-" + fractionComponents[5];
             }
         } else {
             fractionComponents[0] = Integer.toString(numerator) + "/" + Integer.toString(denominator);
@@ -332,12 +369,14 @@ public class Notation {
             fractionComponents[2] = Integer.toString(denominator);
             //denominator
 
-                if (negative) {
-                    fractionComponents[0] = "-" + fractionComponents[0];
-                    fractionComponents[1] = "-" + fractionComponents[1];
-                }
+            if (negative) {
+                fractionComponents[0] = "-" + fractionComponents[0];
+                fractionComponents[1] = "-" + fractionComponents[1];
+            }
         }
 
         return fractionComponents;
     }
+
+    // * StringToNumbers method required
 }

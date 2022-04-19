@@ -5,9 +5,13 @@ public class Keypad {
     public static void main(String[] args) {
 
         try (Scanner read = new Scanner(System.in)) {
-            String num = read.nextLine();
+            Double num = read.nextDouble();
 
-            System.out.println(Notation.formatNumber(num));
+            String [] fraction = Notation.convertToFraction(num);
+
+            for (int i = 0; i < fraction.length; i++) {
+                System.out.print(fraction[i] + " ");
+            }
         }
     }
 }
