@@ -1,6 +1,6 @@
 public class Notation {
 
-    public static String[] numbersNotation () {
+    public static String [] numbersNotation () {
 
         String integer = "-?[0-9]+";
         String decimal = integer + "[,\\.][0-9]+";
@@ -40,10 +40,10 @@ public class Notation {
         return false;
     }
 
-    public static String formatNumber (String number) {
+    public static String formatNumber (String number) throws Exception {
 
         if (!isItNumeric(number)) {
-            return "O valor inserido não é um número.";
+            throw new Exception("O valor inserido não é um número.");
         }
 
         String [] notation = numbersNotation();
@@ -138,7 +138,7 @@ public class Notation {
         return decimal;
     }
 
-    public static String formatFraction (String fraction) {
+    public static String formatFraction (String fraction) throws Exception {
 
         String [] notation = numbersNotation();
 
@@ -172,7 +172,7 @@ public class Notation {
             }
 
             //makes the division between the two new fractions
-            String quotient = Fractions.division(numerator, denominator);
+            String quotient = Fractions.division(numerator, denominator)[0];
 
             if (quotient == "1" || quotient == "-1") {
                 return quotient;
@@ -183,6 +183,15 @@ public class Notation {
         }
 
         return numerator + "/" + denominator;
+    }
+
+    public static boolean isItDecimal (String str) {
+
+        if (str.matches("-?[0-9]+[,\\.][0-9]+")) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public static boolean isItFractional (String str) {
@@ -219,10 +228,10 @@ public class Notation {
         return fractionComponents;
     }
 
-    public static Double convertToDecimal (String fraction) {
+    public static double convertToDecimal (String fraction) throws Exception {
 
         if (!isItFractional(fraction)) {
-            throw new NumberFormatException("O valor inserido não é uma fração");
+            throw new Exception("O valor inserido não é uma fração");
         } else {
             fraction = formatNumber(fraction);
         }

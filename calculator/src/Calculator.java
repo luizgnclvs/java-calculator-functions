@@ -1,5 +1,65 @@
 public class Calculator {
 
+    public static double absoluteValue (double num) {
+
+        if (num < 0) {
+            num *= -1;
+        }
+
+        return num;
+    }
+
+    public static double round (double decimal) {
+
+        double decimalPoint = absoluteValue(decimal) - roundDown(absoluteValue(decimal));
+
+        if (decimalPoint < 0.5) {
+            return roundDown(decimal);
+        } else {
+            return roundUp(decimal);
+        }
+    }
+
+    public static double roundDown (double decimal) {
+
+        if (decimal < 0) {
+            decimal = roundUp(absoluteValue(decimal)) * -1;
+        } else {
+            String integer = String.format("%f", decimal);
+
+            integer = integer.substring(0, integer.indexOf("."));
+    
+            decimal = Double.parseDouble(integer);
+        }
+
+        return decimal;
+    }
+
+    public static double roundUp (double decimal) {
+        if (decimal < 0) {
+            return decimal = roundDown(absoluteValue(decimal)) * -1;
+        } else {
+            return decimal = roundDown(decimal) + 1;
+        }
+    }
+
+    // * round with precision
+
+    public static int findGCD (double x, double y) {
+
+        int gcd = 1;
+
+        for (int i = 1; i <= x && i <= y; i++) {
+            if (x % i == 0 && y % i == 0) {
+                gcd = i;
+            }
+        }
+
+        return gcd;
+    }
+
+    // * find LCM
+
     public static double toThePowerOf (double base, double exponent) {
 
         double power = 1;
@@ -39,39 +99,6 @@ public class Calculator {
             guess = currentIteration;
         }
 
-        return Math.round(currentIteration * 1000000.0) / 1000000.0;
-    }
-
-    public static int findGCD (double x, double y) {
-
-        int gcd = 1;
-
-        for (int i = 1; i <= x && i <= y; i++) {
-            if (x % i == 0 && y % i == 0) {
-                gcd = i;
-            }
-        }
-
-        return gcd;
-    }
-
-    public static double absoluteValue (double n) {
-
-        if (n < 0) {
-            n *= -1;
-        }
-
-        return n;
-    }
-
-    public static double roundDown (double n) {
-
-        String num = String.format("%f", n);
-
-        num = num.substring(0, num.indexOf("."));
-
-        n = Double.parseDouble(num);
-
-        return n;
+        return round(currentIteration * 1000000.0) / 1000000.0;
     }
 }

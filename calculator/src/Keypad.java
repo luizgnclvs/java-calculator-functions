@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 public class Keypad {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 
         //tests
         try (Scanner read = new Scanner(System.in)) {
@@ -42,6 +42,15 @@ public class Keypad {
 
                     for (int i = 0; i < fraction.length; i++) {
                         System.out.print(fraction[i] + " | ");
+                    }
+                } else if (operation == 6) {
+                    String multiplier = read.next();
+                    String multiplicand = read.next();
+
+                    String [] product = Fractions.division(multiplier, multiplicand);
+
+                    for (int i = 0; i < product.length; i++) {
+                        System.out.print(product[i] + " | ");
                     }
                 } else {
                     break;
