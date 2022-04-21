@@ -124,7 +124,6 @@ public class Fractions {
         return fractionComponents;
     }
 
-    // * modifications due
     public static String [] division (String dividend, String divisor) throws Exception {
 
         dividend = Notation.formatNumber(dividend);

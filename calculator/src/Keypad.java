@@ -52,6 +52,28 @@ public class Keypad {
                     for (int i = 0; i < product.length; i++) {
                         System.out.print(product[i] + " | ");
                     }
+                } else if (operation == 7) {
+                    int x = read.nextInt();
+                    int y = read.nextInt();
+
+                    System.out.print(Calculator.findLCM(x, y));
+                } else if (operation == 8) {
+                    double decimal = read.nextDouble();
+                    int digits = read.nextInt();
+
+                    System.out.print(Calculator.roundWithPrecision(decimal, digits));
+                } else if (operation == 9) {
+                    String fraction = read.next();
+
+                    String [] fractionComponents = Notation.fractionStringToArray(fraction);
+
+                    for (int i = 0; i < fractionComponents.length; i++) {
+                        System.out.print(fractionComponents[i] + " | ");
+                    }
+                } else if (operation == 10) {
+                    String fraction = read.next();
+
+                    System.out.print(Notation.simplifyFraction(fraction));
                 } else {
                     break;
                 }

@@ -36,6 +36,7 @@ public class Calculator {
     }
 
     public static double roundUp (double decimal) {
+
         if (decimal < 0) {
             return decimal = roundDown(absoluteValue(decimal)) * -1;
         } else {
@@ -43,9 +44,20 @@ public class Calculator {
         }
     }
 
-    // * round with precision
+    public static double roundWithPrecision (double decimal, int digits) throws Exception {
 
-    public static int findGCD (double x, double y) {
+        if (digits < 0) {
+            throw new Exception("Índice inválido.");
+        }
+
+        if (digits == 0) {
+            return round(decimal);
+        } else {
+            return round(decimal * toThePowerOf(10, digits)) / toThePowerOf(10, digits);
+        }
+    }
+
+    public static int findGCD (int x, int y) {
 
         int gcd = 1;
 
@@ -58,19 +70,34 @@ public class Calculator {
         return gcd;
     }
 
-    // * find LCM
+    public static int findLCM (int x, int y) {
+
+        int lcm = 1, i; 
+
+        if (x > y) {
+            i = x;
+        } else {
+            i = y;
+        }
+
+        while (true) {
+            if (i % x == 0 && i % y == 0) {
+                lcm = i;
+                break;
+            } else {
+                i++;
+            }
+        }
+
+        return lcm;
+    }
 
     public static double toThePowerOf (double base, double exponent) {
 
         double power = 1;
 
-        if (absoluteValue(exponent) - Math.floor(absoluteValue(exponent)) != 0) {
-            String fraction = Notation.convertToFraction(exponent)[0];
-
-            double numerator = Double.parseDouble(fraction.substring(0, fraction.indexOf("/")));
-            double denominator = Double.parseDouble(fraction.substring(fraction.indexOf("/") + 1));
-
-            power = nthRootOf(toThePowerOf(base, numerator), denominator);
+        if (absoluteValue(exponent) - roundDown(absoluteValue(exponent)) != 0) {
+            power = nthRootOf(toThePowerOf(base, Double.parseDouble(Notation.convertToFraction(exponent)[1])), Double.parseDouble(Notation.convertToFraction(exponent)[2]));
         } else {
             if (exponent < 0) {
                 for (int i = 0; i < absoluteValue(exponent); i++) {
