@@ -10,7 +10,13 @@ public class Keypad {
                 System.out.print("\nOperação: ");
                 int operation = read.nextInt();
 
-                if (operation == 1) {
+                if (operation == 0) {
+                    String str;
+                    do {
+                        str = read.next();
+                        System.out.println("Notation.isItNumeric => " + str + " => " + Notation.isItNumeric(str));
+                    } while (!str.matches("exit"));
+                } else if (operation == 1) {
                     String str = read.next();
 
                     System.out.println("\nNotation.isItNumeric => " + Notation.isItNumeric(str));

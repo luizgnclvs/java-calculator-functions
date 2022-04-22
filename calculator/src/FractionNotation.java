@@ -32,6 +32,7 @@ public class FractionNotation {
 
             StringBuilder str = new StringBuilder(fraction);
 
+            //if the fraction is negative, then the '-', '(' and ')' characters are removed to facilitate manipulation of the String
             str.deleteCharAt(str.indexOf("-"));
             str.deleteCharAt(str.indexOf("("));
             str.deleteCharAt(str.indexOf(")"));
@@ -113,10 +114,10 @@ public class FractionNotation {
             fraction = Notation.formatNumber(fraction);
         }
 
-        Double numerator = Double.parseDouble(stringToArray(fraction)[1]);
-        Double denominator = Double.parseDouble(stringToArray(fraction)[2]);
+        double numerator = Double.parseDouble(fraction.substring(0, fraction.indexOf("/")));
+        double denominator = Double.parseDouble(fraction.substring(fraction.indexOf("/") + 1));
 
-        if (stringToArray(fraction)[4].matches("-")) {
+        if (fraction.matches("-.*")) {
             return -(numerator / denominator);
         } else {
             return numerator / denominator;

@@ -2,24 +2,21 @@ public class Notation {
 
     public static String [] numbersNotation () {
 
-        String integer = "-?[0-9]+";
-        String decimal = integer + "[,\\.][0-9]+";
-
         String [] notation = new String [7];
 
         notation[0] = "-?0+[,\\.]?0*";
         //matches with any amount of zeroes
-        notation[1] = integer;
+        notation[1] = "-?[0-9]+";
         //matches with any integer number, positive or not
-        notation[2] = decimal;
+        notation[2] = "-?[0-9]+[,\\.][0-9]+";
         //matches with any decimal number, positive or not
-        notation[3] = integer + "/" + integer;
+        notation[3] = "-?[0-9]+/-?[0-9]+|-?\\([0-9]+/[0-9]+\\)";
         //matches with any fraction with both integer numerator and denominator, whether they be positive or not
-        notation[4] = decimal + "/" + integer;
+        notation[4] = "-?[0-9]+[,\\.][0-9]+/-?[0-9]+|-?\\([0-9]+[,\\.][0-9]+/[0-9]+\\)";
         //matches with any fraction with a decimal numerator and integer denominator, whether they be positive or not
-        notation[5] = integer + "/" + decimal;
+        notation[5] = "-?[0-9]+/-?[0-9]+[,\\.][0-9]+|-?\\([0-9]+/[0-9]+[,\\.][0-9]+\\)";
         //matches with any fraction with a integer numerator and decimal denominator, whether they be positive or not
-        notation[6] = decimal + "/" + decimal;
+        notation[6] = "-?[0-9]+[,\\.][0-9]+/-?[0-9]+[,\\.][0-9]+|-?\\([0-9]+[,\\.][0-9]+/[0-9]+[,\\.][0-9]+\\)";
         //matches with any fraction with both decimal numerator and denominator, whether they be positive or not
 
         return notation;
@@ -148,6 +145,16 @@ public class Notation {
 
     public static String formatFraction (String fraction) throws Exception {
 
+        //deletes parentheses to make for easier manipulation
+        if (fraction.matches(".*\\(.*\\)")) {
+            StringBuilder str = new StringBuilder(fraction);
+
+            str.deleteCharAt(str.indexOf("("));
+            str.deleteCharAt(str.indexOf(")"));
+
+            fraction = str.toString();
+        }
+
         //separates the numerator and denominator of the fraction into different variables for easier manipulation
         String numerator = fraction.substring(0, fraction.indexOf("/"));
         String denominator = fraction.substring(fraction.indexOf("/") + 1);
@@ -208,12 +215,15 @@ public class Notation {
             }
         }
 
-        fraction = FractionNotation.simplifyFraction(numerator + "/" + denominator);
+        int gcd = Calculator.findGCD(Integer.parseInt(numerator), Integer.parseInt(denominator));
+
+        numerator = Integer.toString((Integer.parseInt(numerator) / gcd));
+        denominator = Integer.toString((Integer.parseInt(denominator) / gcd));
 
         if (negative) {
-            return "-" + fraction;
+            return "-(" + numerator + "/" + denominator + ")";
         } else {
-            return fraction;
+            return numerator + "/" + denominator;
         }
     }
 
