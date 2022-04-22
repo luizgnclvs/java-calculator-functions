@@ -1,6 +1,6 @@
-public class Fractions {
+public class Fraction {
 
-    public static String [] multiplication (String multiplier, String multiplicand) throws Exception {
+    public static String multiplication (String multiplier, String multiplicand) throws Exception {
 
         multiplier = Notation.formatNumber(multiplier);
         multiplicand = Notation.formatNumber(multiplicand);
@@ -10,11 +10,11 @@ public class Fractions {
         }
 
         if (Notation.isItDecimal(multiplier)) {
-            multiplier = Notation.convertToFraction(Double.parseDouble(multiplier))[0];
+            multiplier = FractionNotation.convertToFraction(Double.parseDouble(multiplier));
         }
 
         if (Notation.isItDecimal(multiplicand)) {
-            multiplicand = Notation.convertToFraction(Double.parseDouble(multiplicand))[0];
+            multiplicand = FractionNotation.convertToFraction(Double.parseDouble(multiplicand));
         }
 
         boolean negative = false;
@@ -35,15 +35,15 @@ public class Fractions {
         String [] factor2;
 
         if (!Notation.isItFractional(multiplier)) {
-            factor1 = Notation.typeOfFraction(Double.parseDouble(multiplier));
+            factor1 = FractionNotation.typeOfFraction(Double.parseDouble(multiplier));
         } else {
-            factor1 = Notation.typeOfFraction(Notation.convertToDecimal(multiplier));
+            factor1 = FractionNotation.typeOfFraction(FractionNotation.convertToDecimal(multiplier));
         }
 
         if (!Notation.isItFractional(multiplicand)) {
-            factor2 = Notation.typeOfFraction(Double.parseDouble(multiplicand));
+            factor2 = FractionNotation.typeOfFraction(Double.parseDouble(multiplicand));
         } else {
-            factor2 = Notation.typeOfFraction(Notation.convertToDecimal(multiplicand));
+            factor2 = FractionNotation.typeOfFraction(FractionNotation.convertToDecimal(multiplicand));
         }
 
         int numerator1, numerator2, denominator1, denominator2;
@@ -72,14 +72,14 @@ public class Fractions {
         finalNumerator /= gcd;
         finalDenominator /= gcd;
 
-        String [] fractionComponents = Notation.typeOfFraction((double)finalNumerator / (double)finalDenominator);
+        String [] fractionComponents = FractionNotation.typeOfFraction((double)finalNumerator / (double)finalDenominator);
 
         if (fractionComponents.length == 1) {
             if (negative) {
                 fractionComponents[0] = "-" + fractionComponents[0];
             }
 
-            return fractionComponents;
+            return fractionComponents[0];
         } else if (fractionComponents.length == 3) {
             fractionComponents[0] = Integer.toString(finalNumerator) + "/" + Integer.toString(finalDenominator);
             //proper vulgar fraction
@@ -121,10 +121,10 @@ public class Fractions {
             }
         }
 
-        return fractionComponents;
+        return fractionComponents[0];
     }
 
-    public static String [] division (String dividend, String divisor) throws Exception {
+    public static String division (String dividend, String divisor) throws Exception {
 
         dividend = Notation.formatNumber(dividend);
         divisor = Notation.formatNumber(divisor);
@@ -134,11 +134,11 @@ public class Fractions {
         }
 
         if (Notation.isItDecimal(dividend)) {
-            dividend = Notation.convertToFraction(Double.parseDouble(dividend))[0];
+            dividend = FractionNotation.convertToFraction(Double.parseDouble(dividend));
         }
 
         if (Notation.isItDecimal(divisor)) {
-            divisor = Notation.convertToFraction(Double.parseDouble(divisor))[0];
+            divisor = FractionNotation.convertToFraction(Double.parseDouble(divisor));
         }
 
         if (!Notation.isItFractional(divisor)) {

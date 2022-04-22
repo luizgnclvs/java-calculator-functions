@@ -92,12 +92,15 @@ public class Calculator {
         return lcm;
     }
 
-    public static double toThePowerOf (double base, double exponent) {
+    public static double toThePowerOf (double base, double exponent) throws Exception {
 
         double power = 1;
 
         if (absoluteValue(exponent) - roundDown(absoluteValue(exponent)) != 0) {
-            power = nthRootOf(toThePowerOf(base, Double.parseDouble(Notation.convertToFraction(exponent)[1])), Double.parseDouble(Notation.convertToFraction(exponent)[2]));
+            String numerator = FractionNotation.stringToArray(Double.toString(exponent))[1];
+            String denominator = FractionNotation.stringToArray(Double.toString(exponent))[2];
+
+            power = nthRootOf(toThePowerOf(base, Double.parseDouble(numerator)), Double.parseDouble(denominator));
         } else {
             if (exponent < 0) {
                 for (int i = 0; i < absoluteValue(exponent); i++) {
@@ -113,7 +116,7 @@ public class Calculator {
         return power;
     }
 
-    public static double nthRootOf (double a, double n) {
+    public static double nthRootOf (double a, double n) throws Exception {
 
         double guess = Math.random() % 10;
         double accuracy = 0.000001;
