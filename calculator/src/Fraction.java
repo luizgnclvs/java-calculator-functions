@@ -9,119 +9,33 @@ public class Fraction {
             throw new Exception("Nenhum dos valores inserido é uma fração");
         }
 
-        if (Notation.isItDecimal(multiplier)) {
-            multiplier = FractionNotation.convertToFraction(Double.parseDouble(multiplier));
-        }
-
-        if (Notation.isItDecimal(multiplicand)) {
-            multiplicand = FractionNotation.convertToFraction(Double.parseDouble(multiplicand));
-        }
-
         boolean negative = false;
 
-        if (multiplier.matches("-.*") ^ multiplicand.matches("-.*")) {
+        if (FractionNotation.stringToArray(multiplier)[3] != FractionNotation.stringToArray(multiplicand)[3])  {
             negative = true;
         }
 
-        if (multiplier.matches("-.*")) {
-            multiplier = multiplier.substring(1);
-        }
+        int numerator = Integer.parseInt(FractionNotation.stringToArray(multiplier)[1]) * Integer.parseInt(FractionNotation.stringToArray(multiplicand)[1]);
+        int denominator = Integer.parseInt(FractionNotation.stringToArray(multiplier)[2]) * Integer.parseInt(FractionNotation.stringToArray(multiplicand)[2]);
 
-        if (multiplicand.matches("-.*")) {
-            multiplicand = multiplicand.substring(1);
-        }
+        int gcd = Calculator.findGCD(numerator, denominator);
 
-        String [] factor1;
-        String [] factor2;
+        numerator /= gcd;
+        denominator /= gcd;
 
-        if (!Notation.isItFractional(multiplier)) {
-            factor1 = FractionNotation.typeOfFraction(Double.parseDouble(multiplier));
-        } else {
-            factor1 = FractionNotation.typeOfFraction(FractionNotation.convertToDecimal(multiplier));
-        }
-
-        if (!Notation.isItFractional(multiplicand)) {
-            factor2 = FractionNotation.typeOfFraction(Double.parseDouble(multiplicand));
-        } else {
-            factor2 = FractionNotation.typeOfFraction(FractionNotation.convertToDecimal(multiplicand));
-        }
-
-        int numerator1, numerator2, denominator1, denominator2;
-
-        if (factor1.length == 1) {
-            numerator1 = Integer.parseInt(factor1[0]);
-            denominator1 = 1;
-        } else {
-            numerator1 = Integer.parseInt(multiplier.substring(0, multiplier.indexOf("/")));
-            denominator1 = Integer.parseInt(multiplier.substring(multiplier.indexOf("/") + 1));
-        }
-
-        if (factor2.length == 1) {
-            numerator2 = Integer.parseInt(factor2[0]);
-            denominator2 = 1;
-        } else {
-            numerator2 = Integer.parseInt(multiplicand.substring(0, multiplicand.indexOf("/")));
-            denominator2 = Integer.parseInt(multiplicand.substring(multiplicand.indexOf("/") + 1));
-        }
-
-        int finalNumerator = numerator1 * numerator2;
-        int finalDenominator = denominator1 * denominator2;
-
-        int gcd = Calculator.findGCD(finalNumerator, finalDenominator);
-
-        finalNumerator /= gcd;
-        finalDenominator /= gcd;
-
-        String [] fractionComponents = FractionNotation.typeOfFraction((double)finalNumerator / (double)finalDenominator);
-
-        if (fractionComponents.length == 1) {
+        if (numerator == denominator) {
             if (negative) {
-                fractionComponents[0] = "-" + fractionComponents[0];
-            }
-
-            return fractionComponents[0];
-        } else if (fractionComponents.length == 3) {
-            fractionComponents[0] = Integer.toString(finalNumerator) + "/" + Integer.toString(finalDenominator);
-            //proper vulgar fraction
-            fractionComponents[1] = Integer.toString(finalNumerator);
-            //numerator
-            fractionComponents[2] = Integer.toString(finalDenominator);
-            //denominator
-
-            if (negative) {
-                fractionComponents[0] = "-" + fractionComponents[0];
-                fractionComponents[1] = "-" + fractionComponents[1];
+                return "-1";
+            } else {
+                return "1";
             }
         } else {
-            int integer = finalNumerator / finalDenominator;
-
-            finalNumerator = finalNumerator % finalDenominator;
-
-            fractionComponents[0] = Integer.toString(finalNumerator + integer * finalDenominator) + "/" + Integer.toString(finalDenominator);
-            //improper vulgar fraction
-            fractionComponents[1] = Integer.toString(finalNumerator + integer * finalDenominator);
-            //numerator
-            fractionComponents[2] = Integer.toString(finalDenominator);
-            //denominator
-            fractionComponents[3] = Integer.toString(integer) + " + " + Integer.toString(finalNumerator) + "/" + Integer.toString(finalDenominator);
-            //mixed number
-            fractionComponents[4] = Integer.toString(integer);
-            //integer part of the mixed number
-            fractionComponents[5] = Integer.toString(finalNumerator);
-            //numerator of the mixed number
-            fractionComponents[6] = Integer.toString(finalDenominator);
-            //denominator of the mixed number
-
             if (negative) {
-                fractionComponents[0] = "-" + fractionComponents[0];
-                fractionComponents[1] = "-" + fractionComponents[1];
-                fractionComponents[3] = "-" + Integer.toString(integer) + " - " + Integer.toString(finalNumerator) + "/" + Integer.toString(finalDenominator);
-                fractionComponents[4] = "-" + fractionComponents[4];
-                fractionComponents[5] = "-" + fractionComponents[5];
+                return "-(" + numerator + "/" + denominator + ")";
+            } else {
+                return numerator + "/" + denominator;
             }
         }
-
-        return fractionComponents[0];
     }
 
     public static String division (String dividend, String divisor) throws Exception {
@@ -133,22 +47,15 @@ public class Fraction {
             throw new Exception("Nenhum dos valores inserido é uma fração");
         }
 
-        if (Notation.isItDecimal(dividend)) {
-            dividend = FractionNotation.convertToFraction(Double.parseDouble(dividend));
-        }
-
         if (Notation.isItDecimal(divisor)) {
             divisor = FractionNotation.convertToFraction(Double.parseDouble(divisor));
-        }
-
-        if (!Notation.isItFractional(divisor)) {
-            divisor = "1/" + divisor;
         } else {
-            String numerator = divisor.substring(divisor.indexOf("/") + 1);
-            String denominator = divisor.substring(0, divisor.indexOf("/"));
-
-            divisor = numerator + "/" + denominator;
+            if (!Notation.isItFractional(divisor)) {
+                divisor += "/1";
+            }
         }
+
+        divisor = FractionNotation.stringToArray(divisor)[2] + "/" + FractionNotation.stringToArray(divisor)[1];
 
         return multiplication(dividend, divisor);
     }

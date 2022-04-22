@@ -8,9 +8,18 @@ public class FractionNotation {
         if (Calculator.absoluteValue(decimal) >= 1) {
             //identifies if the decimal is actually a invisible denominator fraction, i.e. an integer number
             if (Calculator.absoluteValue(decimal) - Calculator.roundDown(Calculator.absoluteValue(decimal)) == 0) { 
-                components = new String [1];
+                components = new String [4];
 
-                components[0] = Integer.toString((int)decimal);
+                components[1] = Integer.toString((int)Calculator.absoluteValue(decimal));
+                components[2] = "1";
+                components[3] = "+";
+
+                components[0] = components[1] + "/1";
+
+                if (decimal < 0) {
+                    components[0] = "-(" + components[0] + ")";
+                    components[3] = "-";
+                }
             } else { //improper fraction
                 components = new String [7];
             }
@@ -22,6 +31,18 @@ public class FractionNotation {
     }
 
     public static String [] stringToArray (String fraction) throws Exception {
+
+        if (!Notation.isItFractional(fraction)) {
+            if (Notation.isItDecimal(fraction)) {
+                fraction = convertToFraction(Double.parseDouble(fraction));
+            } else {
+                if (Notation.isItNumeric(fraction)) {
+                    fraction += "/1";
+                } else {
+                    throw new Exception("O valor inserido não é um número.");
+                }
+            }
+        }
 
         fraction = Notation.formatNumber(fraction);
 
@@ -41,14 +62,6 @@ public class FractionNotation {
         }
 
         String [] fractionComponents = typeOfFraction(convertToDecimal(fraction));
-
-        if (!Notation.isItFractional(fraction)) {
-            if (Notation.isItDecimal(fraction)) {
-                fraction = convertToFraction(Double.parseDouble(fraction));
-            } else {
-                return fractionComponents;
-            }
-        }
 
         fractionComponents[0] = fraction;
         //vulgar fraction, which is proper if {numerator < denominator} and improper if otherwise
@@ -126,10 +139,8 @@ public class FractionNotation {
 
     public static String convertToFraction (double decimal) throws Exception {
 
-        int type = typeOfFraction(decimal).length;
-
-        if (type == 1) {
-            return typeOfFraction(decimal)[0] + "/1";
+        if (typeOfFraction(decimal)[2] == "1") {
+            return typeOfFraction(decimal)[0];
         }
 
         boolean negative = false;
@@ -141,7 +152,7 @@ public class FractionNotation {
 
         int integer = 0;
 
-        if (type == 7) {
+        if (typeOfFraction(decimal).length == 7) {
             integer = (int)Calculator.roundDown(decimal);
             decimal -= integer;
         }
@@ -222,20 +233,15 @@ public class FractionNotation {
         numerator /= gcd;
         denominator /= gcd;
 
-        if (type == 7) {
-            //improper vulgar fraction
-            if (negative) {
-                return "-(" + (numerator + integer * denominator) + "/" + denominator + ")";
-            } else {
-                return (numerator + integer * denominator) + "/" + denominator;
-            }
+        if (integer > 0) {
+            //improper fraction
+            numerator += integer * denominator;
+        }
+
+        if (negative) {
+            return  "-(" + numerator + "/" + denominator + ")";
         } else {
-            //proper vulgar fraction
-            if (negative) {
-                return  "-(" + numerator + "/" + denominator + ")";
-            } else {
-                return numerator + "/" + denominator;
-            }
+            return numerator + "/" + denominator;
         }
     }
 }
