@@ -4,291 +4,224 @@ public class Keypad {
 
     public static void menu () throws Exception {
 
-        String [] operations = new String [] {"Sair", "\'Notation.isItNumeric\'", "\'Notation.formatNumber\'", "\'Notation.isItDecimal\'", "\'Notation.isItFractional\'", "\'FractionNotation.typeOfFraction\'", "\'FractionNotation.stringToArray\'", "\'FractionNotation.simplifyFraction\'", "\'FractionNotation.convertToDecimal\'", "\'FractionNotation.convertToFraction\'", "\'Fraction.multiplication\'", "\'Fraction.division\'", "\'Calculator.absoluteValue\'", "\'Rounding.directedRounding\'", "\'Rounding.roundToNearestInt\'", "\'Rounding.roundRandomTieBreaker\'", "\'Rounding.roundWithPrecision\'", "\'Calculator.findGCD\'", "\'Calculator.findLCM\'", "\'Calculator.toThePowerOf\'", "\'Calculator.nthRootOf\'"};
+        String [] classes = new String [] {"Sair", "\'Notation\'", "\'FractionNotation\'", "\'Fraction\'", "\'Rounding\'", "\'Calculator\'"};
 
-        System.out.printf("\n%s \n%s" , "Olá, gostaria fazer alguma operação matemática?", "Insira o número correspondente à operação desejada.\n");
+        System.out.printf("\n%s \n%s" , "Olá, gostaria fazer alguma operação matemática?", "Insira o número correspondente à classe de operações desejada.\n");
 
-        for (int i = 0; i < operations.length; i++) {
-            System.out.printf("\n%d\t%s\t%s", i, "===>", operations[i]);
+        for (int i = 0; i < classes.length; i++) {
+            System.out.printf("\n\t%d\t%s\t%s", i, "===>", classes[i]);
         }
 
         try (Scanner read = new Scanner(System.in)) {
-            System.out.print("\n\nOperação: ");
+            System.out.print("\n\nClasse: ");
             int entry = read.nextInt();
 
-            execute(entry, operations[entry]);
+            for (int i = 0; i < 1; i++) {
+
+                if (entry == 0) {
+                    System.out.println("\nOk. Obrigado pela atenção.");
+                } else if (entry > 0 && entry < classes.length) {
+                    execute(entry);
+                } else {
+                    System.out.print("\n\nOpção inválida! Tente novamente: ");
+                    entry = read.nextInt();
+
+                    i--;
+                }
+            }
         }
     }
 
-    public static void execute (int entry, String operation) throws Exception {
+    public static String [] notation () {
 
-        try (Scanner read = new Scanner(System.in)) {
-            String arrow = " => ";
+        String [] notation = new String [] {"Sair", "\'isItNumeric\'", "\'formatNumber\'", "\'isItDecimal\'", "\'isItFractional\'"};
 
-            if (entry == 0) {
-                System.out.println("\nOk. Obrigado pela atenção.\n");
+        return notation;
+    }
+
+    public static String [] fractionNotation () {
+
+        String [] fractionNotation = new String [] {"Sair", "\'typeOfFraction\'", "\'stringToArray\'", "\'simplifyFraction\'", "\'convertToDecimal\'", "\'convertToFraction\'"};    
+
+        return fractionNotation;
+    }
+
+    public static String [] fraction () {
+
+        String [] fraction = new String [] {"Sair", "\'multiplication\'", "\'division\'"};
+
+        return fraction;
+    }
+
+    public static String [] rounding () {
+
+        String [] rounding = new String [] {"Sair", "\'directedRounding\'", "\'roundToNearestInt\'", "\'roundRandomTieBreaker\'", "\'roundWithPrecision\'"};
+
+        return rounding;
+    }
+
+    public static String [] calculator () {
+
+        String [] calculator = new String [] {"Sair", "\'absoluteValue\'", "\'findGCD\'", "\'findLCM\'", "\'toThePowerOf\'", "\'nthRootOf\'"};
+
+        return calculator;
+    }
+
+    public static void execute (int entry) throws Exception {
+
+        String [] operations;
+
+        if (entry > 0 && entry < 6) {
+            if (entry == 1) {
+                operations = notation();
+            } else if (entry == 2) {
+                operations = fractionNotation();
+            } else if (entry == 3) {
+                operations = fraction();
+            } else if (entry == 4) {
+                operations = rounding();
             } else {
-                if (entry == 1) {
-                    String str;
+                operations = calculator();
+            }
 
-                    System.out.println("Insira \'voltar\' se quiser sair da operação.\n");
+            System.out.println("\nQual operação deseja realizar?\n");
 
-                    do {
-                        System.out.print("String: ");
-                        str = read.next();
+            try (Scanner read = new Scanner(System.in)) {
+                for (int i = 0; i < 1; i++) {
 
-                        if (str.matches("voltar")) {
-                            break;
+                    for (int j = 0; j < operations.length; j++) {
+                        System.out.printf("\t%d\t%s\t%s\n", j, "===>", operations[j]);
+                    }
+
+                    System.out.print("\nOperação: ");
+                    int ops = read.nextInt();
+
+                    //sair
+                    if (ops == 0) {
+                        System.out.println("\nOk. Obrigado pela atenção.");
+
+                        menu();
+                    } else if (ops > 0 && ops < 6) {
+                        if (ops == 1) {
+                            if (entry == 1) {
+                                String str = read.next();
+                                System.out.println(Notation.isItNumeric(str));
+                            } else if (entry == 2) {
+                                double decimal = read.nextDouble();
+                                System.out.println(FractionNotation.typeOfFraction(decimal).length);
+                            } else if (entry == 3) {
+                                String multiplier = read.next();
+                                String multiplicand = read.next();
+                                System.out.println(Fraction.multiplication(multiplier, multiplicand));
+                            } else if (entry == 4) {
+                                double decimal = read.nextDouble();
+                                int method = read.nextInt();
+                                System.out.println(Rounding.directedRounding(decimal, method));
+                            } else {
+                                double num = read.nextDouble();
+                                System.out.println(Calculator.absoluteValue(num));
+                            }
+                        } else if (ops == 2) {
+                            if (entry == 1) {
+                                String number = read.next();
+                                System.out.println(Notation.formatNumber(number));
+                            } else if (entry == 2) {
+                                String fraction = read.next();
+                                System.out.println(FractionNotation.stringToArray(fraction));
+                            } else if (entry == 3) {
+                                String dividend = read.next();
+                                String divisor = read.next();
+                                System.out.println(Fraction.division(dividend, divisor));
+                            } else if (entry == 4) {
+                                double decimal = read.nextDouble();
+                                int method = read.nextInt();
+                                System.out.println(Rounding.roundToNearestInt(decimal, method));
+                            } else {
+                                int x = read.nextInt();
+                                int y = read.nextInt();
+                                System.out.println(Calculator.findGCD(x, y));
+                            }
+                        } else if (ops == 3) {
+                            if (entry == 1) {
+                                String number = read.next();
+                                System.out.println(Notation.isItDecimal(number));
+                            } else if (entry == 2) {
+                                String fraction = read.next();
+                                System.out.println(FractionNotation.simplifyFraction(fraction));
+                            } else if (entry == 3) {
+                                System.out.print("\n\nOpção inválida! Tente novamente: ");
+                                ops = read.nextInt();
+    
+                                i--;
+                            } else if (entry == 4) {
+                                double decimal = read.nextDouble();
+                                System.out.println(Rounding.roundRandomTieBreaker(decimal));
+                            } else {
+                                int x = read.nextInt();
+                                int y = read.nextInt();
+                                System.out.println(Calculator.findLCM(x, y));
+                            }
+                        } else if (ops == 4) {
+                            if (entry == 1) {
+                                String number = read.next();
+                                System.out.println(Notation.isItFractional(number));
+                            } else if (entry == 2) {
+                                String fraction = read.next();
+                                System.out.println(FractionNotation.convertToDecimal(fraction));
+                            } else if (entry == 3) {
+                                System.out.print("\n\nOpção inválida! Tente novamente: ");
+                                ops = read.nextInt();
+    
+                                i--;
+                            } else if (entry == 4) {
+                                double decimal = read.nextDouble();
+                                int digits = read.nextInt();
+                                System.out.println(Rounding.roundWithPrecision(decimal, digits));
+                            } else {
+                                double base = read.nextDouble();
+                                double exponent = read.nextDouble();
+                                System.out.println(Calculator.toThePowerOf(base, exponent));
+                            }
+                        } else if (ops == 5) {
+                            if (entry == 1) {
+                                System.out.print("\n\nOpção inválida! Tente novamente: ");
+                                ops = read.nextInt();
+    
+                                i--;
+                            } else if (entry == 2) {
+                                double decimal = read.nextDouble();
+                                System.out.println(FractionNotation.convertToFraction(decimal));
+                            } else if (entry == 3) {
+                                System.out.print("\n\nOpção inválida! Tente novamente: ");
+                                ops = read.nextInt();
+    
+                                i--;
+                            } else if (entry == 4) {
+                                System.out.print("\n\nOpção inválida! Tente novamente: ");
+                                ops = read.nextInt();
+    
+                                i--;
+                            } else {
+                                double a = read.nextDouble();
+                                double n = read.nextDouble();
+                                System.out.println(Calculator.nthRootOf(a, n));
+                            }
+
+                            i--;
+                        } else {
+                            System.out.print("\n\nOpção inválida! Tente novamente: ");
+                            entry = read.nextInt();
+
+                            i--;
                         }
 
-                        System.out.println("\n" + operation + arrow + Notation.isItNumeric(str));
-                    } while (str != "voltar");
-                } else if (entry == 2) {
-                    String number;
-
-                    System.out.println("Insira \'voltar\' se quiser sair da operação.\n");
-
-                    do {
-                        System.out.print("String: ");
-                        number = read.next();
-
-                        System.out.println("\n" + operation + arrow + Notation.formatNumber(number));
-                    } while (number != "voltar");
-                } else if (entry == 3) {
-                    String number;
-
-                    System.out.println("Insira \'voltar\' se quiser sair da operação.\n");
-
-                    do {
-                        System.out.print("String: ");
-                        number = read.next();
-
-                        System.out.println("\n" + operation + arrow + Notation.isItDecimal(number));
-                    } while (number != "voltar");
-                } else if (entry == 4) {
-                    String number;
-
-                    System.out.println("Insira \'voltar\' se quiser sair da operação.\n");
-
-                    do {
-                        System.out.print("String: ");
-                        number = read.next();
-
-                        System.out.println("\n" + operation + arrow + Notation.isItFractional(number));
-                    } while (number != "voltar");
-                } else if (entry == 5) {
-                    double decimal;
-
-                    System.out.println("Insira \'0\' se quiser sair da operação.\n");
-
-                    do {
-                        System.out.print("Double: ");
-                        decimal = read.nextDouble();
-
-                        System.out.println("\n" + operation + arrow + FractionNotation.typeOfFraction(decimal));
-                    } while (decimal != 0);
-                } else if (entry == 6) {
-                    String fraction;
-
-                    System.out.println("Insira \'voltar\' se quiser sair da operação.\n");
-
-                    do {
-                        System.out.print("String: ");
-                        fraction = read.next();
-
-                        System.out.println("\n" + operation + arrow + FractionNotation.stringToArray(fraction));
-                    } while (fraction != "voltar");
-                } else if (entry == 7) {
-                    String fraction;
-
-                    System.out.println("Insira \'voltar\' se quiser sair da operação.\n");
-
-                    do {
-                        System.out.print("String: ");
-                        fraction = read.next();
-
-                        System.out.println("\n" + operation + arrow + FractionNotation.simplifyFraction(fraction));
-                    } while (fraction != "voltar");
-                } else if (entry == 8) {
-                    String fraction;
-
-                    System.out.println("Insira \'voltar\' se quiser sair da operação.\n");
-
-                    do {
-                        System.out.print("String: ");
-                        fraction = read.next();
-
-                        System.out.println("\n" + operation + arrow + FractionNotation.convertToDecimal(fraction));
-                    } while (fraction != "voltar");
-                } else if (entry == 9) {
-                    double decimal;
-
-                    System.out.println("Insira \'0\' se quiser sair da operação.\n");
-
-                    do {
-                        System.out.print("Double: ");
-                        decimal = read.nextDouble();
-
-                        System.out.println("\n" + operation + arrow + FractionNotation.typeOfFraction(decimal));
-                    } while (decimal != 0);
-                    FractionNotation.convertToFraction(decimal);
-                } else if (entry == 10) {
-                    String multiplier, multiplicand;
-
-                    System.out.println("Insira \'voltar\' se quiser sair da operação.\n");
-
-                    do {
-                        System.out.print("String: ");
-                        multiplier = read.next();
-
-                        System.out.print("String: ");
-                        multiplicand = read.next();
-
-                        System.out.println("\n" + operation + arrow + Fraction.multiplication(multiplier, multiplicand));
-                    } while (multiplier != "voltar");
-                } else if (entry == 11) {
-                    String dividend, divisor;
-
-                    System.out.println("Insira \'voltar\' se quiser sair da operação.\n");
-
-                    do {
-                        System.out.print("String: ");
-                        dividend = read.next();
-
-                        System.out.print("String: ");
-                        divisor = read.next();
-
-                        System.out.println("\n" + operation + arrow + Fraction.division(dividend, divisor));
-                    } while (dividend != "voltar");
-                } else if (entry == 12) {
-                    double num;
-
-                    System.out.println("Insira \'0\' se quiser sair da operação.\n");
-
-                    do {
-                        System.out.print("Double: ");
-                        num = read.nextDouble();
-
-                        System.out.println("\n" + operation + arrow + Calculator.absoluteValue(num));
-                    } while (num != 0);
-                } else if (entry == 13) {
-                    double decimal;
-                    int method;
-
-                    System.out.println("Insira \'0\' se quiser sair da operação.\n");
-
-                    do {
-                        System.out.print("Double: ");
-                        decimal = read.nextDouble();
-
-                        System.out.print("Int: ");
-                        method = read.nextInt();
-
-                        System.out.println("\n" + operation + arrow + Rounding.directedRounding(decimal, method));
-                    } while (decimal != 0);
-                } else if (entry == 14) {
-                    double decimal;
-                    int method;
-
-                    System.out.println("Insira \'0\' se quiser sair da operação.\n");
-
-                    do {
-                        System.out.print("Double: ");
-                        decimal = read.nextDouble();
-
-                        System.out.print("Int: ");
-                        method = read.nextInt();
-
-                        System.out.println("\n" + operation + arrow + Rounding.roundToNearestInt(decimal, method));
-                    } while (decimal != 0);
-                } else if (entry == 15) {
-                    double decimal;
-
-                    System.out.println("Insira \'0\' se quiser sair da operação.\n");
-
-                    do {
-                        System.out.print("Double: ");
-                        decimal = read.nextDouble();
-
-                        System.out.println("\n" + operation + arrow + Rounding.roundRandomTieBreaker(decimal));
-                    } while (decimal != 0);
-                } else if (entry == 16) {
-                    double decimal;
-                    int digits;
-
-                    System.out.println("Insira \'0\' se quiser sair da operação.\n");
-
-                    do {
-                        System.out.print("Double: ");
-                        decimal = read.nextDouble();
-
-                        System.out.print("Int: ");
-                        digits = read.nextInt();
-
-                        System.out.println("\n" + operation + arrow + Rounding.roundWithPrecision(decimal, digits));
-                    } while (decimal != 0);
-                } else if (entry == 17) {
-                    int x, y;
-
-                    System.out.println("Insira \'0\' se quiser sair da operação.\n");
-
-                    do {
-                        System.out.print("Int: ");
-                        x = read.nextInt();
-
-                        System.out.print("Int: ");
-                        y = read.nextInt();
-
-                        System.out.println("\n" + operation + arrow + Calculator.findGCD(x, y));
-                    } while (x != 0);
-                } else if (entry == 18) {
-                    int x, y;
-
-                    System.out.println("Insira \'0\' se quiser sair da operação.\n");
-
-                    do {
-                        System.out.print("Int: ");
-                        x = read.nextInt();
-
-                        System.out.print("Int: ");
-                        y = read.nextInt();
-
-                        System.out.println("\n" + operation + arrow + Calculator.findLCM(x, y));
-                    } while (x != 0);
-                }  else if (entry == 19) {
-                    double base, exponent;
-
-                    System.out.println("Insira \'0\' se quiser sair da operação.\n");
-
-                    do {
-                        System.out.print("Double: ");
-                        base = read.nextDouble();
-
-                        System.out.print("Double: ");
-                        exponent = read.nextDouble();
-
-                        System.out.println("\n" + operation + arrow + Calculator.toThePowerOf(base, exponent));
-                    } while (base != 0);
-                } else if (entry == 20) {
-                    double a, n;
-
-                    System.out.println("Insira \'0\' se quiser sair da operação.\n");
-
-                    do {
-                        System.out.print("Double: ");
-                        a = read.nextDouble();
-
-                        System.out.print("Double: ");
-                        n = read.nextDouble();
-
-                        System.out.println("\n" + operation + arrow + Calculator.nthRootOf(a, n));
-                    } while (a != 0);
-                } else {
-                    System.out.println("\nOpção inválida. Tente novamente.\n");
+                        System.out.print("\n");
+                        i--;
+                    }
                 }
-
-                menu();
             }
+        } else {
+            System.out.println("\nOcorreu algum tipo de erro. Tente novamente.\n");
         }
     }
 

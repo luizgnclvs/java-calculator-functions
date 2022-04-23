@@ -14,10 +14,10 @@ public class Rounding {
             return roundUp(decimal);
         } else if (method == 2) {
             //rounding away from infinity {+∞ and −∞} (or 'truncate')
-            return roundHalfTowardZero(decimal);
+            return roundTowardZero(decimal);
         } else if (method == 3) {
             //rounding away from zero {0}
-            return roundHalfTowardInfinity(decimal);
+            return roundTowardInfinity(decimal);
         } else {
             try (Scanner read = new Scanner(System.in)) {
                 System.out.print("\n\nO método escolhido é inválido! Selecione outro: ");
