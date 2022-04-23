@@ -7,7 +7,7 @@ public class FractionNotation {
         //identifies if the integer part of the decimal number is other than zero - i.e. the resulting fraction will be an improper one - then it sets the correct amount of components in the array
         if (Calculator.absoluteValue(decimal) >= 1) {
             //identifies if the decimal is actually a invisible denominator fraction, i.e. an integer number
-            if (Calculator.absoluteValue(decimal) - Calculator.roundDown(Calculator.absoluteValue(decimal)) == 0) { 
+            if (Calculator.absoluteValue(decimal) - Rounding.roundDown(Calculator.absoluteValue(decimal)) == 0) { 
                 components = new String [4];
 
                 components[1] = Integer.toString((int)Calculator.absoluteValue(decimal));
@@ -153,7 +153,7 @@ public class FractionNotation {
         int integer = 0;
 
         if (typeOfFraction(decimal).length == 7) {
-            integer = (int)Calculator.roundDown(decimal);
+            integer = (int)Rounding.roundDown(decimal);
             decimal -= integer;
         }
 

@@ -4,7 +4,7 @@ public class Keypad {
 
     public static void menu () throws Exception {
 
-        String [] operations = new String [] {"Sair", "\'Notation.isItNumeric\'", "\'Notation.formatNumber\'", "\'Notation.isItDecimal\'", "\'Notation.isItFractional\'", "FractionNotation.typeOfFraction", "FractionNotation.stringToArray", "FractionNotation.simplifyFraction", "FractionNotation.convertToDecimal", "FractionNotation.convertToFraction", "Fraction.multiplication", "\'Fraction.division\'", "\'Calculator.absoluteValue\'", "\'Calculator.round\'", "\'Calculator.roundDown\'", "\'Calculator.roundUp\'", "\'Calculator.roundWithPrecision\'", "\'Calculator.findGCD\'", "\'Calculator.findLCM\'", "\'Calculator.toThePowerOf\'", "\'Calculator.nthRootOf\'"};
+        String [] operations = new String [] {"Sair", "\'Notation.isItNumeric\'", "\'Notation.formatNumber\'", "\'Notation.isItDecimal\'", "\'Notation.isItFractional\'", "\'FractionNotation.typeOfFraction\'", "\'FractionNotation.stringToArray\'", "\'FractionNotation.simplifyFraction\'", "\'FractionNotation.convertToDecimal\'", "\'FractionNotation.convertToFraction\'", "\'Fraction.multiplication\'", "\'Fraction.division\'", "\'Calculator.absoluteValue\'", "\'Rounding.directedRounding\'", "\'Rounding.roundToNearestInt\'", "\'Rounding.roundRandomTieBreaker\'", "\'Rounding.roundWithPrecision\'", "\'Calculator.findGCD\'", "\'Calculator.findLCM\'", "\'Calculator.toThePowerOf\'", "\'Calculator.nthRootOf\'"};
 
         System.out.printf("\n%s \n%s" , "Olá, gostaria fazer alguma operação matemática?", "Insira o número correspondente à operação desejada.\n");
 
@@ -36,6 +36,10 @@ public class Keypad {
                     do {
                         System.out.print("String: ");
                         str = read.next();
+
+                        if (str.matches("voltar")) {
+                            break;
+                        }
 
                         System.out.println("\n" + operation + arrow + Notation.isItNumeric(str));
                     } while (str != "voltar");
@@ -169,6 +173,7 @@ public class Keypad {
                     } while (num != 0);
                 } else if (entry == 13) {
                     double decimal;
+                    int method;
 
                     System.out.println("Insira \'0\' se quiser sair da operação.\n");
 
@@ -176,10 +181,14 @@ public class Keypad {
                         System.out.print("Double: ");
                         decimal = read.nextDouble();
 
-                        System.out.println("\n" + operation + arrow + Calculator.round(decimal));
+                        System.out.print("Int: ");
+                        method = read.nextInt();
+
+                        System.out.println("\n" + operation + arrow + Rounding.directedRounding(decimal, method));
                     } while (decimal != 0);
                 } else if (entry == 14) {
                     double decimal;
+                    int method;
 
                     System.out.println("Insira \'0\' se quiser sair da operação.\n");
 
@@ -187,7 +196,10 @@ public class Keypad {
                         System.out.print("Double: ");
                         decimal = read.nextDouble();
 
-                        System.out.println("\n" + operation + arrow + Calculator.roundDown(decimal));
+                        System.out.print("Int: ");
+                        method = read.nextInt();
+
+                        System.out.println("\n" + operation + arrow + Rounding.roundToNearestInt(decimal, method));
                     } while (decimal != 0);
                 } else if (entry == 15) {
                     double decimal;
@@ -198,7 +210,7 @@ public class Keypad {
                         System.out.print("Double: ");
                         decimal = read.nextDouble();
 
-                        System.out.println("\n" + operation + arrow + Calculator.roundUp(decimal));
+                        System.out.println("\n" + operation + arrow + Rounding.roundRandomTieBreaker(decimal));
                     } while (decimal != 0);
                 } else if (entry == 16) {
                     double decimal;
@@ -213,7 +225,7 @@ public class Keypad {
                         System.out.print("Int: ");
                         digits = read.nextInt();
 
-                        System.out.println("\n" + operation + arrow + Calculator.roundWithPrecision(decimal, digits));
+                        System.out.println("\n" + operation + arrow + Rounding.roundWithPrecision(decimal, digits));
                     } while (decimal != 0);
                 } else if (entry == 17) {
                     int x, y;
