@@ -162,14 +162,14 @@ public class Notation {
         numerator = formatNumber(numerator);
         denominator = formatNumber(denominator);
 
-        //identifies if the numerator is equal to zero and, if so, returns "0" as all fraction with numerator = 0 are themselves equal to "0"
-        if (numerator.matches("0")) {
-            return "0";
-        }
-
         //identifies if the denominator is equal to zero and, if so, throws exception on the grounds that fractions with denominator = 0 are undefined
         if (denominator.matches("0")) {
             throw new Exception("Fração indefinida. {denominador = 0}");
+        }
+
+        //identifies if the numerator is equal to zero and, if so, returns "0" as all fraction with numerator = 0 are themselves equal to "0"
+        if (numerator.matches("0")) {
+            return "0";
         }
 
         boolean negative = false;

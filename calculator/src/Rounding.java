@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class Rounding {
 
     public static int directedRounding (double decimal, int method) {
-    //these four methods are called directed rounding, as the displacements from the original number to the rounded value are all directed toward or away from the same limiting value {0, +∞, or −∞}
+        //these four methods are called directed rounding, as the displacements from the original number to the rounded value are all directed toward or away from the same limiting value {0, +∞, or −∞}
 
         if (method == 0) {
             //rounding toward negative infinity {−∞} (or take the 'floor')
@@ -36,7 +36,7 @@ public class Rounding {
             int i = 0;
 
             while (true) {
-                if (i < decimal && (i + 1) > decimal) {
+                if (i <= decimal && (i + 1) > decimal) {
                     break;
                 } else {
                     i++;

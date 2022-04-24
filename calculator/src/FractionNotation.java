@@ -61,7 +61,10 @@ public class FractionNotation {
             fraction = str.toString();
         }
 
-        String [] fractionComponents = typeOfFraction(convertToDecimal(fraction));
+        double numerator = Double.parseDouble(fraction.substring(0, fraction.indexOf("/")));
+        double denominador = Double.parseDouble(fraction.substring(fraction.indexOf("/") + 1));
+
+        String [] fractionComponents = typeOfFraction(numerator / denominador);
 
         fractionComponents[0] = fraction;
         //vulgar fraction, which is proper if {numerator < denominator} and improper if otherwise
@@ -112,7 +115,7 @@ public class FractionNotation {
         numerator /= gcd;
         denominator /= gcd;
 
-        if (stringToArray(fraction)[4].matches("-")) {
+        if (stringToArray(fraction)[3].matches("-")) {
             return "-(" + numerator + "/" + denominator + ")";
         } else {
             return numerator + "/" + denominator;
@@ -127,10 +130,10 @@ public class FractionNotation {
             fraction = Notation.formatNumber(fraction);
         }
 
-        double numerator = Double.parseDouble(fraction.substring(0, fraction.indexOf("/")));
-        double denominator = Double.parseDouble(fraction.substring(fraction.indexOf("/") + 1));
+        double numerator = Double.parseDouble(stringToArray(fraction)[1]);
+        double denominator = Double.parseDouble(stringToArray(fraction)[2]);
 
-        if (fraction.matches("-.*")) {
+        if (stringToArray(fraction)[3].matches("-")) {
             return -(numerator / denominator);
         } else {
             return numerator / denominator;
@@ -163,11 +166,30 @@ public class FractionNotation {
         //eliminates the last character of the String to avoid rounding issues that may come from converting a Double variable to a String
         decimalStr = decimalStr.substring(0, decimalStr.length() - 1);
 
+        //eliminates any 'extra' zeroes that may come from converting double to String
+        if (decimalStr.matches("[^0]+0+")) {
+            int index = 0, endIndex = 0;
+
+            for (int i = 1; i < 10; i++) {
+                if (decimalStr.matches(".*" + i + ".*")) {
+                    index = decimalStr.lastIndexOf(Integer.toString(i));
+
+                    if (index >= endIndex) {
+                        endIndex = index + 1;
+                    }
+                }
+            }
+
+            decimalStr = decimalStr.substring(0, endIndex);
+        }
+
         boolean repeatingDecimals = false;
 
         for (int i = 1; i < 10; i++) {
             //identifies if the decimal contains any repeating decimals whitin the parameters set (i.e. 3 to 6 repeating digits)
             if (decimalStr.matches("[0-9]*" + i + "{3,6}")) {
+                repeatingDecimals = true;
+
                 boolean areThereNonRepeating = false;
 
                 int digitCount = 0, index = 0;
@@ -193,10 +215,10 @@ public class FractionNotation {
                 //array with fraction equivalents to repeating decimals from 1 to 9
                 String [] repeatingFractions = new String [] {"1/9", "2/9", "1/3", "4/9", "5/9", "2/3", "7/9", "8/9", "1/1"};
 
-                decimalStr = repeatingFractions[i - 1];
-
                 if (areThereNonRepeating) {
                     int nonRepeating = Integer.parseInt((decimalStr.substring(0, digitCount)));
+
+                    decimalStr = repeatingFractions[i - 1];
 
                     //assigns the amount of zeroes in the denominator according to the number of non-repeating digits
                     for (int k = 0; k < digitCount; k++) {
@@ -204,14 +226,24 @@ public class FractionNotation {
                     }
 
                     //multiplies the non-repeating decimal with the original denominator of the equivalent fraction of the repeating decimal (i.e. 1, 3 or 9)
-                    nonRepeating *= Integer.parseInt(decimalStr.substring(decimalStr.indexOf("/") + 1, (decimalStr.indexOf("/") + 2)));
+                    if (i == 9) {
+                        nonRepeating *= 1;
+                    } else if (i == 3 || i == 6) {
+                        nonRepeating *= 3;
+                    } else {
+                        nonRepeating *= 9;
+                    }
 
                     //adds the product to the numerator of the fraction to find out the new numerator
                     nonRepeating += Integer.parseInt(decimalStr.substring(0, 1));
 
                     //puts the new numerator and denominator together into a fraction
                     decimalStr = Integer.toString(nonRepeating) + decimalStr.substring(decimalStr.indexOf("/"));
+                } else {
+                    decimalStr = repeatingFractions[i - 1];
                 }
+
+                break;
             }
         }
 

@@ -1,12 +1,12 @@
 public class Calculator {
 
-    public static double absoluteValue (double num) {
+    public static double absoluteValue (double number) {
 
-        if (num < 0) {
-            num *= -1;
+        if (number < 0) {
+            number *= -1;
         }
 
-        return num;
+        return number;
     }
 
     public static int findGCD (int x, int y) {
@@ -68,19 +68,26 @@ public class Calculator {
         return power;
     }
 
-    public static double nthRootOf (double a, double n) throws Exception {
+    public static double nthRootOf (double radicand, double degree) throws Exception {
+        //Newton's method
 
-        double guess = Math.random() % 10;
+        //generates a random first guess that kickstarts the process of finding the root
+        double firstGuess = Math.random() % 10;
+        //defines the level of accuracy of the root by the amount of zeroes between the decimal point and the '1'
         double accuracy = 0.000001;
-        double diffRoots = 2147483647;
-        double currentIteration = 0.0;
-        
-        while (diffRoots > accuracy) {
-            currentIteration = ((n - 1.0) * guess + a / toThePowerOf(guess, n - 1)) / n;
-            diffRoots = absoluteValue(currentIteration - guess);
-            guess = currentIteration;
+        //initializes the difference between the two roots with INTMAX
+        double diff = 2147483647;
+        //denotes current value of the root
+        double root = 0.0;
+
+        //does the proccess again and again until it reaches the desired accuracy
+        while (diff > accuracy) {
+            //calculates the current root value using Newton's method
+            root = ((degree - 1.0) * firstGuess + radicand / toThePowerOf(firstGuess, degree - 1)) / degree;
+            diff = absoluteValue(root - firstGuess);
+            firstGuess = root;
         }
 
-        return Rounding.roundRandomTieBreaker(currentIteration * 1000000.0) / 1000000.0;
+        return Rounding.roundRandomTieBreaker(root * 1000000.0) / 1000000.0;
     }
 }

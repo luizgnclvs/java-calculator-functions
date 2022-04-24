@@ -108,7 +108,13 @@ public class Keypad {
                                 System.out.println(Notation.isItNumeric(str));
                             } else if (entry == 2) {
                                 double decimal = read.nextDouble();
-                                System.out.println(FractionNotation.typeOfFraction(decimal).length);
+                                System.out.println(FractionNotation.typeOfFraction(decimal).length + "\n");
+
+                                for (int j = 0; j < FractionNotation.typeOfFraction(decimal).length; j++) {
+                                    System.out.print(FractionNotation.typeOfFraction(decimal)[j] + "    ");
+                                }
+
+                                System.out.print("\n");
                             } else if (entry == 3) {
                                 String multiplier = read.next();
                                 String multiplicand = read.next();
@@ -127,7 +133,12 @@ public class Keypad {
                                 System.out.println(Notation.formatNumber(number));
                             } else if (entry == 2) {
                                 String fraction = read.next();
-                                System.out.println(FractionNotation.stringToArray(fraction));
+
+                                for (int j = 0; j < FractionNotation.stringToArray(fraction).length; j++) {
+                                    System.out.print(FractionNotation.stringToArray(fraction)[j] + "    ");
+                                }
+
+                                System.out.print("\n");
                             } else if (entry == 3) {
                                 String dividend = read.next();
                                 String divisor = read.next();
