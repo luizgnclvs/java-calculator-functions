@@ -41,14 +41,14 @@ public class Keypad {
 
     public static String [] fractionNotation () {
 
-        String [] fractionNotation = new String [] {"Sair", "\'typeOfFraction\'", "\'stringToArray\'", "\'simplifyFraction\'", "\'convertToDecimal\'", "\'convertToFraction\'"};    
+        String [] fractionNotation = new String [] {"Sair", "\'typeOfFraction\'", "\'stringToArray\'", "\'simplifyFraction\'", "\'convertToDecimal\'", "\'convertToFraction\'", "\'equivalentFractions\'"};    
 
         return fractionNotation;
     }
 
     public static String [] fraction () {
 
-        String [] fraction = new String [] {"Sair", "\'multiplication\'", "\'division\'"};
+        String [] fraction = new String [] {"Sair", "\'multiplication\'", "\'division\'", "\'additionOrSubtraction\'"};
 
         return fraction;
     }
@@ -101,7 +101,7 @@ public class Keypad {
                         System.out.println("\nOk. Obrigado pela atenção.");
 
                         menu();
-                    } else if (ops > 0 && ops < 6) {
+                    } else if (ops > 0 && ops < 7) {
                         if (ops == 1) {
                             if (entry == 1) {
                                 String str = read.next();
@@ -160,10 +160,9 @@ public class Keypad {
                                 String fraction = read.next();
                                 System.out.println(FractionNotation.simplifyFraction(fraction));
                             } else if (entry == 3) {
-                                System.out.print("\n\nOpção inválida! Tente novamente: ");
-                                ops = read.nextInt();
-    
-                                i--;
+                                String term1 = read.next();
+                                String term2 = read.next();
+                                System.out.println(Fraction.additionOrSubtraction(term1, term2));
                             } else if (entry == 4) {
                                 double decimal = read.nextDouble();
                                 System.out.println(Rounding.roundRandomTieBreaker(decimal));
@@ -219,6 +218,20 @@ public class Keypad {
                             }
 
                             i--;
+                        } else if (ops == 6) {
+                            if (entry == 2) {
+                                String fraction1 = read.next();
+                                String fraction2 = read.next();
+
+                                for (int j = 0; j < FractionNotation.equivalentFractions(fraction1, fraction2).length; j++) {
+                                    System.out.print(FractionNotation.equivalentFractions(fraction1, fraction2)[j] + "    ");
+                                }
+                            } else {
+                                System.out.print("\n\nOpção inválida! Tente novamente: ");
+                                ops = read.nextInt();
+    
+                                i--;
+                            }
                         } else {
                             System.out.print("\n\nOpção inválida! Tente novamente: ");
                             entry = read.nextInt();
@@ -238,7 +251,6 @@ public class Keypad {
 
     public static void main(String[] args) throws Exception {
 
-        //tests
         menu();
     }
 }

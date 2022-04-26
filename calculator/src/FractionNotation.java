@@ -122,6 +122,54 @@ public class FractionNotation {
         }
     }
 
+    public static String [] equivalentFractions (String fraction1, String fraction2) throws Exception {
+
+        if (!Notation.isItFractional(fraction1) && !Notation.isItFractional(fraction2)) {
+            throw new Exception("Nenhum dos valores inserido é uma fração");
+        }
+
+        fraction1 = Notation.formatNumber(fraction1);
+        fraction2 = Notation.formatNumber(fraction2);
+
+        int denominator = Calculator.findLCM(Integer.parseInt(stringToArray(fraction1)[2]), Integer.parseInt(stringToArray(fraction2)[2]));
+        int numerator1 = (denominator / Integer.parseInt(stringToArray(fraction1)[2])) * Integer.parseInt(stringToArray(fraction1)[1]);
+        int numerator2 = (denominator / Integer.parseInt(stringToArray(fraction2)[2])) * Integer.parseInt(stringToArray(fraction2)[1]);
+
+        if (stringToArray(fraction1)[3] == "-") {
+            fraction1 = "-(" + numerator1 + "/" + denominator + ")";
+        } else {
+            fraction1 = numerator1 + "/" + denominator;
+        }
+
+        if (stringToArray(fraction2)[3] == "-") {
+            fraction2 = "-(" + numerator2 + "/" + denominator + ")";
+        } else {
+            fraction2 = numerator2 + "/" + denominator;
+        }
+
+        String [] equivalentFractions = new String [5];
+
+        equivalentFractions[0] = Integer.toString(denominator);
+
+        if (stringToArray(fraction1)[3] == "-") {
+            equivalentFractions[1] = "-";
+        } else {
+            equivalentFractions[1] = "+";
+        }
+
+        equivalentFractions[2] = Integer.toString(numerator1);
+
+        if (stringToArray(fraction2)[3] == "-") {
+            equivalentFractions[3] = "-";
+        } else {
+            equivalentFractions[3] = "+";
+        }
+
+        equivalentFractions[4] = Integer.toString(numerator2);
+
+        return equivalentFractions;
+    }
+
     public static double convertToDecimal (String fraction) throws Exception {
 
         if (!Notation.isItFractional(fraction)) {
