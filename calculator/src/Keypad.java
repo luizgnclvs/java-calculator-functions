@@ -4,7 +4,7 @@ public class Keypad {
 
     public static void menu () throws Exception {
 
-        String [] classes = new String [] {"Sair", "\'Notation\'", "\'FractionNotation\'", "\'Fraction\'", "\'Rounding\'", "\'Calculator\'"};
+        String [] classes = new String [] {"Sair", "\'Notation\'", "\'FractionNotation\'", "\'Fraction\'", "\'Rounding\'", "\'Calculator\'", "\'Circle\'"};
 
         System.out.printf("\n%s \n%s" , "Olá, gostaria fazer alguma operação matemática?", "Insira o número correspondente à classe de operações desejada.\n");
 
@@ -67,11 +67,18 @@ public class Keypad {
         return calculator;
     }
 
+    public static String [] circle () {
+
+        String [] circle = new String [] {"Sair", "\'pi\'", "\'areaWithRadius\'"};
+
+        return circle;
+    }
+
     public static void execute (int entry) throws Exception {
 
         String [] operations;
 
-        if (entry > 0 && entry < 6) {
+        if (entry > 0 && entry < 7) {
             if (entry == 1) {
                 operations = notation();
             } else if (entry == 2) {
@@ -80,8 +87,10 @@ public class Keypad {
                 operations = fraction();
             } else if (entry == 4) {
                 operations = rounding();
-            } else {
+            } else if (entry == 5) {
                 operations = calculator();
+            } else {
+                operations = circle();
             }
 
             System.out.println("\nQual operação deseja realizar?\n");
@@ -123,9 +132,12 @@ public class Keypad {
                                 double decimal = read.nextDouble();
                                 int method = read.nextInt();
                                 System.out.println(Rounding.directedRounding(decimal, method));
-                            } else {
+                            } else if (entry == 5) {
                                 double num = read.nextDouble();
                                 System.out.println(Calculator.absoluteValue(num));
+                            } else {
+                                int accuracy = read.nextInt();
+                                System.out.println(Circle.pi(accuracy));
                             }
                         } else if (ops == 2) {
                             if (entry == 1) {
@@ -147,10 +159,14 @@ public class Keypad {
                                 double decimal = read.nextDouble();
                                 int method = read.nextInt();
                                 System.out.println(Rounding.roundToNearestInt(decimal, method));
-                            } else {
+                            } else if (entry == 5) {
                                 int x = read.nextInt();
                                 int y = read.nextInt();
                                 System.out.println(Calculator.findGCD(x, y));
+                            } else {
+                                double radius = read.nextDouble();
+                                int accuracy = read.nextInt();
+                                System.out.println(Circle.areaWithRadius(radius, accuracy));
                             }
                         } else if (ops == 3) {
                             if (entry == 1) {
@@ -185,8 +201,8 @@ public class Keypad {
                                 i--;
                             } else if (entry == 4) {
                                 double decimal = read.nextDouble();
-                                int digits = read.nextInt();
-                                System.out.println(Rounding.roundWithPrecision(decimal, digits));
+                                int accuracy = read.nextInt();
+                                System.out.println(Rounding.roundWithPrecision(decimal, accuracy));
                             } else {
                                 double base = read.nextDouble();
                                 double exponent = read.nextDouble();

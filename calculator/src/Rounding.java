@@ -213,16 +213,16 @@ public class Rounding {
         }
     }
 
-    public static double roundWithPrecision (double decimal, int digits) throws Exception {
+    public static double roundWithPrecision (double decimal, int accuracy) throws Exception {
 
-        if (digits < 0) {
+        if (accuracy < 0) {
             throw new Exception("Índice inválido.");
         }
 
-        if (digits == 0) {
+        if (accuracy == 0) {
             return roundRandomTieBreaker(decimal);
         } else {
-            return roundRandomTieBreaker(decimal * Calculator.toThePowerOf(10.0, digits)) / Calculator.toThePowerOf(10.0, digits);
+            return roundRandomTieBreaker(decimal * Calculator.toThePowerOf(10.0, accuracy)) / Calculator.toThePowerOf(10.0, accuracy);
         }
     }
 }
